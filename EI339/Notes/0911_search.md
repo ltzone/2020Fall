@@ -1,5 +1,5 @@
 ---
-title: 【Artificial Intelligence】Uninformed Search
+title: 【Artificial Intelligence】1-2 Uninformed Search
 url: ai-search
 date: 2020-09-11 10:01:41
 tags: 
@@ -121,13 +121,13 @@ A **solution** is a sequence of actions which transforms the start state to a go
 ### Depth-First Search 
 - expand a deepest node first 
 - Fringe is a LIFO stack 
-- Not Complete (in case of infinite nodes)
+- *Not Complete (in case of infinite loops)*
 - Not necessarily optimal (least cost)
 - Time Complexity: $1+b+b^2+\ldots + b^m = O(b^m)$
 - Space Complexity: fringe length$O(bm)$
 
 ### Breadth-First Search
-- Not Complete (in case of infinite nodes)
+- Complete
 - Optimal (if all the cost of tiers are same), otherwise not
 - Time Complexity: $1+b+b^2+\ldots + b^s = O(b^s)$, where $s$ is the shallowest tier
 - Space Complexity: fringe length$O(b^s)$

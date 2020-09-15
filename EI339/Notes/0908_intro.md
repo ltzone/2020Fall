@@ -1,5 +1,5 @@
 ---
-title: 【Artificial Intelligence】01 Introduction
+title: 【Artificial Intelligence】1-1 Introduction
 url: ai-intro
 date: 2020-09-08 14:11:45
 tags: 
