@@ -53,18 +53,54 @@
 
 \item Read the introduction of the OS Textbooks (Operating System Concepts (any edition is ok)) and write down what you learned from the introduction and what you want to learn in this course.
 
-~\\
-~\\
-~\\
-~\\
-~\\
-~\\
+What I have learned from OS Introduction.
+
+\begin{itemize}
+    \item The overall computer system can be roughly divided into four parts, the hardware, the operating system, the application programs and a user. The fundamental goal of computer systems is to execute programs and to make solving user problems easier. The definition of operating system remains blurred, but we can here divide it into the always-running kernal, middleware frameworks and system programs.
+    \item In a typical PC computer system, various device controllers are connected through a common bus, and they are managed by the device drivers in the operating systems. CPU and device controllers execute in parallel, the driver knows the status of the controller through \textit{interrupts}. 
+    \item The design of a complete storage system must balance all the factors related to storage topics such as the trade-off between speed and size, the characteritic (e.g. volatile or not) of every hierachy, and the communication between layers.
+    \item A large portion of operating system code is dedicated to managing I/O, to avoid the high overhead when used for bulk data movement, \textit{direct memory access} is used.
+    \item A comuter system can be organized in various ways for specific purposes such as single-processor systems, multiprocessor systems, and clustered systems.
+    \item Operating systems start running by an initial program called \textit{bootstrap program}, then the kernel gets loaded and excuting. After that, system daemons and applications are run. Events are almost always signaled by the occurrence of an interrupt, by hardware or through exception and system call.
+    \item The operating system switches to and executes another process to implement multiprogramming or multitasking, where such techniques as CPU scheduling, dual-mode, timer are involved
+    \item An operating system is a resource manager, it manages processes, memory, file-system, mass-storage, cache and I/O systems.
+    \item \textit{Protection} is the mechanism for controlling the access of processes or users to the resources defined by the computer system. \textit{Security} is implemented to defend a system from external and internal attacks.
+    \item \textit{Virtualization} is a technology that allows us to abstract the hardware of a single computer into several different execution environments.
+    \item Distributed systems are gaining increasing importance. There are several categories of networks according to its size. A network operating system is an operating system that provides features such as file sharing across the network, along with a communication scheme that allows different processes on different computers to exchange messages.
+    \item Several data structures useful and common in the kernal, such as stacks, queues, trees, hash maps and bitmaps.
+    \item Operating systems can be seen in various computing environments such as PC, client-server, peer-to-peer, cloud computing, and embedded systems. There are also a number of free and open-source operating systems ready to use and study. Note there is a difference between the notion of free and open-source.
+\end{itemize}
+
+What I want to learn from OS part of the course
+\begin{itemize}
+    \item How the \textbf{basic} parts of an operating system are organized and \textbf{implemented}, and why they are designed in this way.
+    \item Important concepts in the operating system such as process, thread, and file systems.
+    \item Most importantly, less taxonomy and terminologies, more \textbf{coding and practice}
+\end{itemize}
+
 
 \item Read the introduction of the CA Textbooks (Computer Architecture: A Quantitative Approach (any edition is ok)) and write down what you learned from the introduction and what you want to learn in this course.
 
-~\\
-~\\
+What I have learned from CA introduction
 
+\begin{itemize}
+    \item With technological improvements, a new set of architectures with simper instructions, RISC, raised the performance of computers. Two critical performance techniques are instruction-level parallelism and use of caches.
+    \item The cost-performance improvement leads to new classes of computers, as well as the dominance of microprocessor-based computers across the entire range of computer design. Parallelism at multiple levels, including instruciton-level, task-level, thread-level and request-level, is becoming the driving force of computer design across all classes of computers.
+    \item The definition of computer architecture should not only be limited to instruction set design but also applied to other challenges when implementing the design, such as microarchitecture and hardware.
+    \item Typical ISAs are 80x86, ARM and MIPS, which vary in many aspects such as memory addressing rules, addressing modes, operands, operations, control flow instructions and encodings.
+    \item The architecture is largely affected and driven by trends in technology. For example, bandwidth has outpaced latency across latency across all technologies, feature size is going down while transistor performance is getting more complex to evaluate, subject to various emerging factors such as wire delays.
+    \item Power and energy should also be considered carefully, with techniques such as sleeping idle devices, dynamic voltage-frequency scaling, designs for typical use, and overclocking.
+    \item An understanding of cost and its factors is essential for computer architects. Some major factors that influence the cost of a computer include the cost of water, the reliance of the die, testing, etc.
+    \item Benchmarks are used to measure the performance. There are many benchmarks for specific uses. A benchmark suite is recommended. To normalize execution times, we can use a reference computer to rate others by ratio. To compare between several benchmark programs, we should take geometric mean.
+    \item Some quantitative principles of computer design involve taking advantage of parallelism, using locality, focusing on common use.
+\end{itemize}
+
+What I want to learn from CA part of the course
+\begin{itemize}
+    \item A deeper insight into the instruction set, since we have learnt the basic semantics of MIPS instruction during the Computer Compostion Course, e.g. why they are designed this way.
+    \item Formal methods in quanfifying all the measures, with concrete examples.
+    \item The relationship and boundary between the CA and OS design,  since the course will cover both topics.
+\end{itemize}
 
 
 \end{enumerate}
