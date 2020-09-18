@@ -244,3 +244,78 @@ PC
 > Future Trends
 > - WareHouse Scale Computing
 > - NVM(Non-Volatile Memory) standing out (Merge Storage & Computing)
+
+
+## Opearting System Operations
+- Bootstrap program
+- Kernal loads
+- Starts **system daemons**
+- Kernal **interrupt driven**
+  - hardware interrupt
+  - software interrupt
+    - exception/error
+    - system call
+    - other problems such as infinite loop...
+
+## Multiprogramming and Multitasking
+- Traditional: Multiprogramming: 批处理系统,via **job scheduling**
+- Modern: Timesharing/multitasking
+  - process
+  - CPU scheduling
+  - allows **interative computing**
+  - swapping/virtual memory
+> in some specific domains, some applications are not allowed to be interrupted (e.g. automobile, 5G), which requires kernal mode programming
+
+## Dual-mode and Multimode Operation
+- Dual-mode: user mode and kernal mode
+  - **mode bit** provided by hardware
+  - **Timer** to prevent infinite loop/processing hogging(拱背) resources
+    - kernal mode is limited/timed
+- increasing CPUs support for multi-core operations
+  - Virtual Machine Manager
+
+## Managements
+
+### Process Management
+OS allocates and manages resources for processes, which involves
+- create & delete
+- suspend & resume
+- process synchronization (when multiple processes require access to shared hardware)
+- process communication
+- deadlock handling
+  - when two processes are mutually exclusive
+  - it has to be determined which data to be unlocked, prevent in advance or restore, ...
+
+### Memory Management
+OS will 
+- allocate (or at least notify the GC) memory usage
+
+
+### FS Management
+- organize files through directories
+- access control
+- mapping files onto secondary storage (and ensure dependability)
+- Backup files onto (probably multiple) non-volatile storage media
+
+### Cache Management
+- **Cache coherency**, especially in shared caches among cores
+
+
+### I/O Management
+- hide peculiarities of hardware devices from the user
+  - buffering
+  - caching
+  - spooling
+
+
+## Other Topics
+
+- Protection
+- Security
+- Virtualization
+  - initially, emulation - through **interpretation**, slow
+  - virtualization - running guest OSes **natively compiled**
+- Distributed Systems
+  - Network is a communications path, TCP/IP most common
+  - Network Operating System provides features between systems across network
+
