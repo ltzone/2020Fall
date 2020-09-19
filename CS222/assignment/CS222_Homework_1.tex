@@ -1,0 +1,199 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 1   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Prove that $\log (\log n) = o(n^k)$, where k is a positive constant. (ps: $\log n$ refers to $\log_2 n$.)}
+  \begin{proof}
+  \begin{equation}
+    \lim _{n\rightarrow\infty} \frac{\log(\log n)}{n^k} = \lim _{n\rightarrow\infty} \frac{\frac{1}{n\ln n \cdot \ln 2}}{k n^{k-1}} = \lim _{n\rightarrow\infty} \frac{1}{kn^k \ln n \ln 2} = 0 < \infty
+  \end{equation}
+  Hence, by definition, $\log (\log n) = O(n^k)$.
+  \end{proof}
+  \label{ex1}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 2   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Prove that for any integer $n^2 -1\;>\;3$, there is a prime $p$ satisfying $n!\;>\;p\;> n$}
+  \begin{proof}
+    Consider $n!-1$.
+    
+    Since $n!$ is the product of $1,2,\ldots,n$, $n!-1$ can't be divided by $1,2,\ldots,n$ with a remainder of 0.
+
+    If $n!-1$ is a prime, then the result follows.
+    
+    If $n!-1$ is not a prime, then we can always find a prime divider greater than $n$,
+    
+    i.e. there is a prime $p$ satisfying $n! > p > n$
+  \end{proof}
+  \label{ex2}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 3   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Assume that there is a recurrence formula as follows: 
+  \begin{equation*}
+    D(x) = \begin{cases}
+    1, &if\;\lfloor x \rfloor \leq 1\\
+    3D(x/4) + x - 2, &if\;\lfloor x \rfloor  > 1
+    \end{cases}
+  \end{equation*}
+  Please deduce the non-recursive expression of $D(x)$ and point out its asymptotic complexity.    }
+  \begin{solution}
+  For $x\in \left(-\infty,2\right)$, $D(x)=1$
+
+  For $x\in \left[2,8 \right)$, Let $g(k=0,x)=D(x)=3D(x/4) + x - 2 = 3 + x -2 = x + 1$, $\ldots$
+
+  For $x\in \left[2\cdot 4^{k}, 2\cdot 4^{k+1}\right)$, we have $g(k,x) = 3D(x/4) + x - 2 = 3g(k-1,x) + x - 2$.
+
+  Note that $g(k+1)-g(k)=3(g(k)=g(k-1))$, we have 
+  \begin{equation}
+    \begin{aligned}
+      g(k) &= (g(k)-g(k-1)) + \ldots + (g(1)-g(0)) + g(0) \\
+      &=  3^k x + \ldots + 3^2 x + 3x +(x+1) \\
+      &= (x+1) + \frac{3}{2} (3^k-1) x = \frac{3^{k+1}-1}{2}x + 1
+    \end{aligned}
+  \end{equation}
+  \begin{equation}
+    \begin{aligned}
+      D(x) &=  \frac{3^{k+1}-1}{2}x + 1, \text{ for } k \in \left( \log_4 \frac{x}{2}-1, \log_4 \frac{x}{2}\right] \\
+      &= \frac{3^{ \max \left(\lfloor \log_4 {\frac{x}{2}}\rfloor+1, 0\right)}-1}{2}x + 1
+    \end{aligned}
+  \end{equation}
+  To analyze the asymtotic complexity, note that
+  \begin{equation}
+    \begin{aligned}
+      D(x) &=  \frac{3^{ \max \left(\lfloor \log_4 {\frac{x}{2}}\rfloor+1, 0\right)}-1}{2}x + 1 \le \frac{3^{  \log_4 {\frac{x}{2}}+2}}{2}x + 1 \\
+      &= \frac{9\cdot\left(\frac{x}{2}\right)^{\log_{4} 3} - 1}{2} x + 1 \in O\left(x^{\log_{4} 3 + 1}\right)
+    \end{aligned}
+  \end{equation}
+  \end{solution}
+  \label{ex3}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 4   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Use the minimal counterexample principle to prove that for any integer $n > 10$, there exist integers $i_n\geq0$ and $j_n\geq 0$, such that $n = i_n \times 3 + j_n \times 4$.}
+  \begin{proof}
+     First, it is easy to check 6, 7, 8, 9, 10 can be written as some combination of 3 and 4.
+
+     Suppose otherwise, then there exists a minimal counterexample $n'>10$ and $n'$ can't be written as the combination of 3 and 4. Since $\text{gcd}(3,4)=1$,  $n' - 3$ can't neither be written as the combination of 3 and 4.
+     
+     If $n' - 3 \le 10$, it contradicts to the previous checked fact. If $n' -3 > 10$, it contradicts to the assumption that $n'$ is the minimal counterexample.
+  \end{proof}
+  \label{ex4}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 5   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Analyze the \textbf{average} time complexity of QuickSort in Alg.~\ref{Alg_Quick}.
+
+  \begin{minipage}[t]{0.8\textwidth}
+  \begin{algorithm}[H]
+    \KwIn{An array $A[1,\cdots,n]$}
+    \KwOut{$A[1,\cdots,n]$ sorted nondecreasingly}
+
+    \BlankLine
+    \caption{QuickSort}\label{Alg_Quick}
+
+    \If{$n \le 1$}{
+     \Return\;
+    }
+
+    $pivot \leftarrow A[n]$; $i \leftarrow 1$\;
+    \For{$j \leftarrow 1$ \KwTo $n-1$}{
+      \If{$A[j] < pivot$}{
+        swap $A[i]$ and $A[j]$\;
+        $i \leftarrow i+1$\;
+      }
+    }
+
+    swap $A[i]$ and $A[n]$\;
+    \lIf{$i>1$}{$\operatorname{QuickSort}(A[1,\cdots,i-1])$}
+    \lIf{$i<n$}{$\operatorname{QuickSort}(A[i+1,\cdots,n])$}
+  \end{algorithm}
+  \end{minipage}
+  }
+  \begin{solution}
+  For input of the size $N$, the loops from line 5 to 10 takes $O(N)$ time, and the recursion will take $T(i-1)$ and $T(N-i-1)$ time for elements smaller than the pivot and greater than the pivot, where $T(n)$ is the time taken for $n$ inputs.
+
+  For average case, we can take the average of every possible dividing case. The partition of $N$ elements can be $\left\{0,N-1\right\}$, $\left\{1,N-2\right\}$, $\ldots$ , $\left\{N-1,0\right\}$. Hence we have
+  \begin{equation}
+      T(N) = 2\left(\frac{T(0)+T(1)+\ldots+T(N-1)}{N}\right) + cN
+  \end{equation}
+  \begin{equation}
+    NT(N) = 2\left({T(0)+T(1)+\ldots+T(N-1)}\right) + cN^2
+    \label{eqn1}
+  \end{equation}
+  \begin{equation}
+    (N-1)T(N-1) = 2\left({T(0)+T(1)+\ldots+T(N-2)}\right) + c(N-1)^2
+    \label{eqn2}
+  \end{equation}
+  By subtracting Equation \ref{eqn2} from Equation \ref{eqn1} we have
+  \begin{equation}
+    NT(N) - (N-1)T(N-1) = 2T(N-1) + 2cN - c^2
+  \end{equation}
+  Since constant $c^2$ can be ignored
+  \begin{equation}
+    \begin{aligned}
+      NT(N) &= (N+1)T(N-1) +2cN \\
+      \frac{T(N)}{N+1} &= \frac{T(N-1)}{N} + \frac{2c}{N+1} \\
+      \frac{T(N-1)}{N} &= \frac{T(N-2)}{N-1} + \frac{2c}{N} \\
+      \ldots & \ldots \\
+      \frac{T(2)}{3} &= \frac{T(1)}{2} + \frac{2c}{3}
+    \end{aligned}
+    \label{eqn3}
+  \end{equation}
+  By taking the sum of Equation \ref{eqn3} together, we have
+  \begin{equation}
+    \begin{aligned}
+      T(N) &= (N+1)\left(\frac{T(1)}{2} + 2c \sum_{i=3}^{N+1}\frac{1}{i}\right) \\
+      &\le (N+1)2c \ln N \in O(N\log N)
+    \end{aligned}
+  \end{equation}
+  \end{solution}
+  \label{ex5}
+\end{exercise}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 6   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Rank the following functions by order of growth with explanations: that is, find an arrangement $g_1, g_2, \ldots , g_{k}$ of the functions $g_1 = \Omega(g_2), g_2 = \Omega(g_3), \ldots, g_{k-1} = \Omega(g_{k})$.  Partition your list into equivalence classes such that functions $f(n)$ and $g(n)$ are in the same class if and only if $f(n) = \Theta(g(n))$. Use symbols ``$=$'' and ``$\prec$'' to order these functions appropriately. (ps: $\log n$ refers to $\log_2 n$.)$$
+  \begin{array}{ccccc}
+      2^{\log n} \quad & \quad (\log n)^{\ln n} \quad & \quad n^2 \quad & \quad n! \quad & \quad (n - 1)! \\
+      2^n \quad & \quad n^3 \quad & \quad \log^2 n \quad & \quad e^n \quad & \quad 2^{2^n} \\
+      \log\log n \quad & \quad (n+1)\cdot 2^n \quad & \quad n \quad & \quad \log {(n^2 - n)} \quad & \quad 2^{\ln n} \\
+  \end{array}
+  $$}
+  \begin{solution}
+  \begin{equation}
+    \begin{aligned}
+      \log\log n  \prec \log {(n^2 - n)} \prec \log^2 n \prec 2^{\log n} = n = 2^{\ln n}  \prec n^2 \prec n^3 \\ 
+      \prec ()\log n)^{\ln n} \prec 2^n = e^n \prec (n+1)\cdot 2^n \prec  (n-1)! \prec n! \prec  2^{2^n} 
+    \end{aligned}
+  \end{equation}
+  \end{solution}
+  \label{ex6}
+\end{exercise}
+
