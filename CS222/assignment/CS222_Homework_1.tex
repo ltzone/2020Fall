@@ -51,31 +51,48 @@
   \begin{solution}
   For $x\in \left(-\infty,2\right)$, $D(x)=1$
 
-  For $x\in \left[2,8 \right)$, Let $g(k=0,x)=D(x)=3D(x/4) + x - 2 = 3 + x -2 = x + 1$, $\ldots$
+  For $x\in \left[2,8 \right)$, Let $D_{0}(x)=3D(x/4) + x - 2 = 3 + x -2 = x + 1$, $\ldots$
 
-  For $x\in \left[2\cdot 4^{k}, 2\cdot 4^{k+1}\right)$, we have $g(k,x) = 3D(x/4) + x - 2 = 3g(k-1,x) + x - 2$.
+  For $x\in \left[2\cdot 4^{k}, 2\cdot 4^{k+1}\right)$, Let $D_{k}(x) = a_k x + b_k$, then
+  \begin{equation}
+    \begin{aligned}
+      D_{k+1}(x) &= 3D_k (\frac{x}{4}) + x - 2 \\
+      &= 3 \left(a_k \cdot \frac{x}{4} + b_k \right) + x - 2 \\
+      &= \left(\frac{3}{4}a_k + 1 \right)x + (3b_k - 2)
+    \end{aligned}
+  \end{equation}
+  It follows that
+  \begin{equation}\left\{
+    \begin{array}{l}
+      a_{k+1} = \frac{3}{4}a_k + 1 \\
+      b_{k+1} = 3b_k - 2 \\
+    \end{array}\right. \implies \left\{
+      \begin{array}{l}
+        a_{k} - 4 = \frac{3}{4} (a_{k-1} -4) = \left(\frac{3}{4}\right)^{k-1} (-3)\\
+        b_{k} - 1 = 3(b_{k-1} - 1) = 0 \\
+      \end{array}\right. \implies \left\{
+        \begin{array}{l}
+          a_{k}  = 4 - \left(\frac{3}{4}\right)^{k-1} \cdot 3 \\
+          b_{k} = 1 \\
+        \end{array}\right.
+  \end{equation}
 
-  Note that $g(k+1)-g(k)=3(g(k)=g(k-1))$, we have 
   \begin{equation}
     \begin{aligned}
-      g(k) &= (g(k)-g(k-1)) + \ldots + (g(1)-g(0)) + g(0) \\
-      &=  3^k x + \ldots + 3^2 x + 3x +(x+1) \\
-      &= (x+1) + \frac{3}{2} (3^k-1) x = \frac{3^{k+1}-1}{2}x + 1
+      D(x) &=  a_k x + b_k = \left(4 - \left(\frac{3}{4}\right)^{k-1} \cdot 3\right) x + 1 \text{ for } k \in \left( \log_4 2x -1, \log_4 2x \right] \\
+      &= \left \{  
+        \begin{array}{ll}
+          \left(4 - 3 \left(\frac{3}{4}\right)^{ \lfloor \log_4 {2x}\rfloor-1}\right) x + 1 & x \ge 2 \\
+          1 & x < 2
+        \end{array}
+      \right.
     \end{aligned}
   \end{equation}
-  \begin{equation}
-    \begin{aligned}
-      D(x) &=  \frac{3^{k+1}-1}{2}x + 1, \text{ for } k \in \left( \log_4 \frac{x}{2}-1, \log_4 \frac{x}{2}\right] \\
-      &= \frac{3^{ \max \left(\lfloor \log_4 {\frac{x}{2}}\rfloor+1, 0\right)}-1}{2}x + 1
-    \end{aligned}
-  \end{equation}
-  To analyze the asymtotic complexity, note that
-  \begin{equation}
-    \begin{aligned}
-      D(x) &=  \frac{3^{ \max \left(\lfloor \log_4 {\frac{x}{2}}\rfloor+1, 0\right)}-1}{2}x + 1 \le \frac{3^{  \log_4 {\frac{x}{2}}+2}}{2}x + 1 \\
-      &= \frac{9\cdot\left(\frac{x}{2}\right)^{\log_{4} 3} - 1}{2} x + 1 \in O\left(x^{\log_{4} 3 + 1}\right)
-    \end{aligned}
-  \end{equation}
+  
+  When $x$ is sufficiently large, $\left(4 - 3 \left(\frac{3}{4}\right)^{ \lfloor \log_4 {2x}\rfloor-1}\right) \rightarrow 4$, the asymptotic complexity is $O(x)$
+
+
+
   \end{solution}
   \label{ex3}
 \end{exercise}
@@ -190,7 +207,7 @@
   \begin{equation}
     \begin{aligned}
       \log\log n  \prec \log {(n^2 - n)} \prec \log^2 n \prec 2^{\log n} = n = 2^{\ln n}  \prec n^2 \prec n^3 \\ 
-      \prec ()\log n)^{\ln n} \prec 2^n = e^n \prec (n+1)\cdot 2^n \prec  (n-1)! \prec n! \prec  2^{2^n} 
+      \prec (\log n)^{\ln n} \prec 2^n = e^n \prec (n+1)\cdot 2^n \prec  (n-1)! \prec n! \prec  2^{2^n} 
     \end{aligned}
   \end{equation}
   \end{solution}
