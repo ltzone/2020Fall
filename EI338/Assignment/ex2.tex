@@ -1,0 +1,112 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 1   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{
+    \par{~}
+    \begin{enumerate}
+        \item [1)] 
+        CPU clock rate is 2 MHz,and program takes 40 million cycles to execute,please calculate CPU time.     
+      \item [2)]
+        CPU clock rate is 100 MHz,and program takes 40 million cycles to execute,please calculate CPU time.  
+      \item [3)]
+        CPU clock rate is 2 MHz,and program takes 80 million cycles to execute,please calculate CPU time.
+    \end{enumerate}}
+  \begin{solution}
+
+    \begin{equation}
+        \begin{aligned}
+            \text{CPU Time} &= \frac{\text{Seconds}}{\text{Program}} = \frac{\text{Cycles}}{\text{Program}} \times \frac{\text{Seconds}}{\text{Cycle}} \\
+            &= \frac{\text{Cycles}}{\text{Clock Rate}}
+        \end{aligned}
+    \end{equation}
+  \begin{enumerate}
+      \item $\text{CPU Time} = \frac{40\text{ million}}{2 \text{ million}} = 20 s$
+      \item $\text{CPU Time} = \frac{40\text{ million}}{100 \text{ million}} = 0.4 s$
+      \item $\text{CPU Time} = \frac{80\text{ million}}{2 \text{ million}} = 40 s$
+  \end{enumerate}
+  \end{solution}
+  \label{ex1}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 2   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Suppose that there are three components in a computer system which can be improved (such as IO, CPU, memory), and the acceleration ratio of the three components is: $S_1=15,S_2=10,S_3=5$ ($S_i$ represents the acceleration ratio of the $i-th$ component).If the proportion of the components that can be improved is:$F_1=30\%,F_2=20\%,F_3=10\%$ .Please calculate $S_{overall}$.}
+  \begin{solution}
+  \begin{equation}
+    \begin{aligned}
+        S_{overall_{1}} &=\frac{1}{\left(1-F_1\right)+\frac{F_1}{S_1}} =\frac{1}{(1-0.3)+\frac{0.3}{15}}=\frac{25}{18} \\
+        S_{overall_{2}}&=\frac{1}{\left(1-F_2\right)+\frac{F_2}{S_2}} =\frac{1}{(1-0.2)+\frac{0.2}{10}}=\frac{50}{41} \\
+        S_{overall_{3}}&=\frac{1}{\left(1-F_3\right)+\frac{F_3}{S_3}} =\frac{1}{(1-0.1)+\frac{0.1}{5}}=\frac{25}{23} \\
+        \implies S_{overall} &= S_{overall_{1}} \times S_{overall_{2}} \times S_{overall_{3}} =  \frac{25}{18} \cdot\frac{50}{41} \cdot \frac{25}{23}  = 1.841
+        \end{aligned}
+  \end{equation}
+  \end{solution}
+  \label{ex2}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 3   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{
+    \par{~}
+\begin{itemize}
+    \item [1)] 
+    Suppose CPU Clock Speed is 1000MHz. A benchmark has 1000 instructions:300 instructions are loads/stores (each take 2 clock cycles),400 instructions are sub (each takes 1 cycle),300 instructions are square root (each takes 40 cycles).Please calculate the CPI and the CPU time for the benchmark.
+    \item [2)]
+    Suppose CPU Clock Speed is 1000MHz. And two different programs are running on the computer.Both of them need three types of instructions:$I_1,I_2,I_3$.$I_1$ needs one cycle,$I_2$ needs two cycles,$I_3$ needs three cycles. Program one includes 10 millions $I_1$, 5 millions $I_2$, 1 millions $I_3$. Program two includes 5 millions $I_1$, 2 millions $I_2$, 2 millions $I_3$.Please calculate the CPU time and CPI of the two programs.
+\end{itemize}}
+  \begin{solution}
+  \par{~}
+  \begin{enumerate}
+      \item {
+          \begin{equation}
+              \text{CPI} = \frac{300 \times 2 + 400 + 300 \times 40}{1000} = 12.7
+          \end{equation}
+          \begin{equation}
+              \text{CPU time} = \frac{12.7 \times 1000}{1,000,000,000} = 1.27 \times 10^{-5} s
+          \end{equation}
+      }
+      \item {
+          For program 1, 
+          \begin{equation}
+            \text{CPI} = \frac{10m + 5m \times 2 + 1m \times 3}{10m+5m+1m} = 1.4375
+        \end{equation}
+        \begin{equation}
+            \text{CPU time} = \frac{1.4375 \times 16m}{1,000 m} = 0.023 s
+        \end{equation}
+
+        For program 2, 
+          \begin{equation}
+            \text{CPI} = \frac{5m + 2m \times 2 + 2m \times 3}{5m+2m+2m} = 1.6667
+        \end{equation}
+        \begin{equation}
+            \text{CPU time} = \frac{10m}{1,000 m} = 0.01 s
+        \end{equation}
+      }
+  \end{enumerate}
+
+
+  \end{solution}
+  \label{ex3}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 4   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{You can choose any of the technologies introduced in the compiler/operating system/architecture,but the technologies should be related to the impact on the overall performance of the system. Based on the technologies you chosen, read some related paper.And write a summary(such as brief introduction of the technologies, your thoughts, ideas, conclusions and so on.At least 100 words). }
+  \begin{solution}
+  \par{~}
+  \end{solution}
+  \label{ex4}
+\end{exercise}
