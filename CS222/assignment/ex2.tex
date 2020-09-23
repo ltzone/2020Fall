@@ -1,0 +1,205 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 1   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Consider the following job scheduling problem. We are given all at once N jobs with positive lengths $l_1$,$l_2$,…,$l_n$. We can schedule only one job at a time and once we start a job we must run it to completion. A schedule for a set of jobs is then the starting time for each job $s_1$,$s_2$,…,$s_n$. Find an efficient algorithm to schedule the jobs to minimize the total wait time, where the wait time for a job is the difference between the time the job arrived and when it finished. Since all jobs arrive at the same time $t=0$, the wait time for job $i$ simplifies to $l_i+s_i$ and so the problem is to schedule the jobs to minimize $\sum _{i=1}^{i=n} (l_i + s_i)$. Please design an algorithm based on greedy strategy to solve the above problem(Write a pseudocode) and prove that your algorithm is correct.}
+  \begin{algorithm}
+    \SetKwData{Time}{time}
+    \KwIn{$N$ jobs with positive lengths $l_1,l_2,\ldots,l_n$}
+    \KwOut{A schedule represented by the starting time for each job $s_1,s_2,\ldots,s_n$}
+    \BlankLine
+    Sort the jobs in ascending order of $l_i$\;
+    \Time $\leftarrow 0$ \;
+    \ForEach{$Job_i$ in the sorted result}{
+      $s_i \leftarrow$ \Time \;
+      $\Time  = \Time + l_i$ \;
+    }
+    \Return{ $s_1,s_2,\ldots,s_n$ }
+    \caption{Job Scheduling \label{js1}}
+  \end{algorithm}
+  \begin{proof}
+    \par{~}
+    Note that $\sum_{i=1}^n l_i$ is a constant for fixed input, we can argue that the algorithm will result in a schedule $S$ that minimizes $\sum_{i=1}^n s_i$.
+    
+    Define an inversion to be a pair of jobs where $s_i<s_j$ but $l_i>l_j$.
+
+    Define $S^{*}$ to be an optimal schedule that has the fewest number of inversions, and let’s see what happens.
+
+    We can assume that the optimal schedule has no idle time, otherwise we can remove the idle time, making $\sum_{i=1}^{n} s_i$ no greater than the original schedule.
+
+    If $S^{*}$ has no inversisons, then $S = S^{*}$.
+
+    If $S^{*}$ has an inversion, then we can find a pair of adjacent inversion $s_i$ and $s_j$. We claim that swapping $i$ and $j$ won't increase $\sum_{i=1}^{n} s_i$.
+
+    \begin{itemize}
+      \item For $k \neq i,j$, since all jobs are consecutive, $s_k = s'_k$
+      \item Before swapping, $s'_i + s'_j = \left(\sum_{k=1}^{i-1} l_k + l_j \right) + \sum_{k=1}^{i-1} l_k$
+      \item After swapping, $s_i + s_j = \sum_{k=1}^{i-1} l_k + \left(\sum_{k=1}^{i-1} l_k + l_i \right)$
+      \item Since $l_i \le l_j$, it follows that $s_i + s_j \le s'_i + s'_j $
+    \end{itemize}
+
+    Our claim contradicts the definition of $S^{*}$
+
+  \end{proof}
+
+Consider the above problem, but associate with the jobs positive values of importance $w_1,…,w_n$, and minimize $\sum_{i=1}^{i=n} w_i(l_i+s_i)$. Find an efficient algorithm to determine an optimal schedule in this case. Please design an algorithm based on greedy strategy to solve the above problem(Write a pseudocode). You need not prove that your algorithm is correct.
+  \begin{solution}
+
+  \par{~}
+
+  \begin{algorithm}[H]
+    \SetKwData{Time}{time} \SetKwData{Maxl}{maxl}
+    \KwIn{$N$ jobs with positive lengths $l_1,l_2,\ldots,l_n$ and weights $w_1,w_2,\ldots,w_n$}
+    \KwOut{A schedule represented by the starting time for each job $s_1,s_2,\ldots,s_n$}
+    \BlankLine
+    Sort the jobs in ascending order of $\frac{l_i}{w_i}$\;
+    \Time $\leftarrow 0$ \;
+    \ForEach{$Job_i$ in the sorted result}{
+      $s_i \leftarrow$ \Time \;
+      $\Time  = \Time + l_i$ \;
+    }
+    \Return{ $s_1,s_2,\ldots,s_n$ }
+    \caption{Job Scheduling 2 \label{js2}}
+  \end{algorithm}
+  \end{solution}
+
+  \label{ex1}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 2   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Considering the following Problem, and show your algorithm with pseudocode. Please ensure that the complexity of your algorithm is $O(n)$.
+
+
+  You have an array “prices” for which the $ith$ element is the price of a given stock on day $i$. Design an algorithm to find the maximum profit. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times).
+  
+  Note: You may not engage in multiple transactions at the same time (i.e., you must sell the stock before you buy again).
+  
+  Example1: the input array is : [7,1,5,3,6,4]. The output of the maximum profit is 7.}
+  \begin{solution}
+  
+    \par{~}
+
+  \begin{algorithm}[H]
+    \SetKwArray{Price}{P}\SetKwData{Profit}{profit}\SetKwData{Buy}{buy}\SetKwData{Sell}{sell}\SetKwData{I}{i}
+    \KwIn{Array $\Price[n]$ representing the prices of stock }
+    \KwOut{The maximum profit \Profit}
+    \BlankLine
+    $\Buy \leftarrow 0$, $\Sell \leftarrow 0$ \;
+    $\Profit \leftarrow 0$ \;
+    \For{$\I = 1 : n-1$}{
+      \eIf{$\Price[\I] < \Price[\I - 1]$}
+      %then
+      {
+        $\Profit \leftarrow \Profit + \Price [\Sell] - \Price[\Buy]$ \;
+        $\Buy \leftarrow \I$ \;
+        $\Sell \leftarrow \I$ \;
+      }
+      %else
+      {\If{$\Price[\I] > \Price[\Sell]$}{
+        $\Sell \leftarrow \I$ \;
+      }}
+      \Return{\Profit}
+    }
+    \caption{Stock Strategy\label{stock}}
+  \end{algorithm}
+  \end{solution}
+  \label{ex2}
+\end{exercise}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 3   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Consider the following Interval Problem. 
+
+  INPUT:A set $S = \{(x_i, y_i)|1 \leq  i \leq  n\}$ of intervals over the real line. Think of interval $(x_i
+  , y_i)$ as being a request for a room for a class that meets from time $x_i$ to time $y_i$.
+
+  OUTPUT: Find an assignment of classes to rooms that uses the fewest number of rooms.
+
+  \textbf{Note:} that every room request must be honored and that no two classes can use a room at the same
+  time.
+
+  
+  Consider the following iterative algorithm. Assign as many classes as possible to the first room(sorted by end time), then assign as many classes as possible to the second room, then assign as many classes as possible to the third room, etc. Is this algorithm correct? Prove the correctness of such idea, or else provide a counter-example, and design your algorithm.}
+  \begin{solution}
+    The iterative algorithm is not correct. A counter example of input can be $\left\{ [0,3],[1,5],[6,7],[4,9] \right\}$, which has been sorted according to the end time. According to the iterative algorithm, \textbf{three} classrooms will be assigned for $\left\{ [0,3],[6,7] \right\}$, $\left\{ [1,5]\right\}$, $\left\{ [4,9] \right\}$. But the optimal solution can be $\left\{ [0,3],[4,9] \right\}$ and $\left\{ [1,5],[6,7] \right\}$, which only occupies two classrooms.
+
+    My algorithm is designed as Algorithm \ref{interval} shows.
+
+  \begin{algorithm}[H]
+    \KwIn{A set $S = \{(x_i, y_i)|1 \leq  i \leq  n\}$ of intervals over the real line}
+    \KwOut{An assignment $a_i$ for each interval that use the fewest number of rooms}
+    \SetKwData{Room}{roomCnt}
+    \BlankLine
+    Sort the requests in ascending order of $x_i$ \;
+    $\Room \leftarrow 1$ \;
+    \While{There is an element in $S$ unassigned}{
+      \ForEach{sorted unassigned request $(x_i,y_i) \in S$}{
+        \If{$(x_i,y_i)$ is compatible with current schedule}{
+          $a_i \leftarrow \Room$ \;
+        }
+      }
+      $\Room \leftarrow \Room + 1$ \;
+    }
+    \Return
+    \caption{Interval Scheduling \label{interval}}
+  \end{algorithm}
+  \end{solution}
+  \label{ex3}
+\end{exercise}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 4   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Considering the following Problem, and show your algorithm with pseudocode. Please ensure that the complexity of your algorithm is $O(n)$.
+
+  Given an array of non-negative integers, you are initially positioned at the first index of the array. Each element in the array represents your maximum jump length at that position. Your goal is to reach the last index in the minimum number of jumps.
+
+  
+  Note:You can assume that you can always reach the last index.
+
+  \textbf{Example1:} Input: [2,3,1,1,4]; Output: 2
+  Explanation: The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1 (in index 0 you can choose to jump to index1 or index2), then 3 steps to the last index(in index 1 you can jump to index2, index3 or index4).}
+  \begin{solution}
+
+  \par{~}
+
+  \begin{algorithm}[H]
+    \KwIn{The maximum jump length array $S_n$}
+    \KwOut{The minimal steps required to reach the end of the array}
+    \SetKwData{Jump}{jump}
+    \SetKwData{Far}{far}
+    \SetKwData{End}{end}
+
+    \BlankLine
+    $\Jump \leftarrow 0$, $\Far \leftarrow 0$, $\End \leftarrow 0$\;
+    \For{$i = 0 : n-1$}{
+      $\Far \leftarrow \max (\Far, S[i] + i)$ \;
+      \If{$i = \End$}{
+        $\Jump \leftarrow \Jump + 1$ \;
+        $\End \leftarrow \Far$ \;
+        \If{$\End \ge n - 1$} {
+          \Return{\Jump}
+        }
+      } 
+    }
+    \caption{Minimal Jump\label{jump}}
+  \end{algorithm}
+  \end{solution}
+  \label{ex4}
+\end{exercise}
