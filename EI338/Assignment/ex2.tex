@@ -106,7 +106,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{exercise}[]{You can choose any of the technologies introduced in the compiler/operating system/architecture,but the technologies should be related to the impact on the overall performance of the system. Based on the technologies you chosen, read some related paper.And write a summary(such as brief introduction of the technologies, your thoughts, ideas, conclusions and so on.At least 100 words). }
   \begin{solution}
-  \par{~}
+    \par{~}
+  \paragraph{The impact of \textit{multithreading} on computer performance} Multithreading is the ability of a processor to provide multiple threads of execution concurrently, supported by the operating system. Multithreading allows multiple threads to share the functional units of a single processor in an overlapping fashion, i.e. multithreading shares most of the processor core among a set of threads, duplicating only private state, such as the registers and program counter. There are various kinds of multithreading. For example, \textit{Fine-grained multithreading} switches between threads on each clock, while \textit{Coarse-grained multithreading} only switches on costly stalls, such as level two or three cache misses. The most common implementation of multithreading is called \textit{Simultaneous multithreading}, where techniques such as register renaming and dynamic scheduling allow multiple instructions from independent threads to be executed without regard to the dependences among them, in order to exploit the superscalar ability of the processor.
+
+  The ultimate goal of multithreading is to improve the throughput of the whole system. From my perspective, these three techniques shows an increasing pattern in complexity, and SMT exploits the thread-level parallelism to the most. My another observation is that different techniques may serve for particular use. For example, coarse-grained multithreading works better on multiple threads that are executing different tasks. In fact, for a single-core processor with no superscalar, SMT will make no sense. Therefore, it can also be concluded that multithreading techniques are advancing as the rest of the system evloves.
   \end{solution}
   \label{ex4}
 \end{exercise}
