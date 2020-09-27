@@ -136,22 +136,39 @@
     \end{center}
   \end{figure}
   }
-  \begin{solution}
+  \begin{proof}
   \par{~}
-  \begin{enumerate}
-    \item {
+According to the algorithm, we will prune $n_j$ if 
+  \begin{itemize}
+    Let $n_i$ denote the node on $n_j$'s path to the root at the depth of $i$, and $n_{i1},\ldots,n_{ib_i}$ denote $n_i$'s siblings. Suppose $n_j$ is a max-node, i.e. $j$ is an even number. We can derive the utility value of $n_1$ as follows
+    \begin{equation}
+      \begin{aligned}
+        n_1 &= \min (n_2, n_{21}, \ldots, n_{2b_2}) \\
+        &= \min(\max(n_3, n_{31}, \ldots, n_{3b_3}), n_{21}, \ldots, n_{2b_2}  ) \\
+        &= \min(\max(\ldots \min(n_j, n_{j1},\ldots, n_{jb_j}) \ldots , n_{31}, \ldots, n_{3b_3}), n_{21}, \ldots, n_{2b_2}  ) 
+      \end{aligned}
+    \end{equation}
+    Let $l_{i}$ be the minimum (or maximum) value of the nodes to the left of node $n_{i}$ at depth $i$ and $r_{i}$ be the minimum (or maximum) value of the unexplored nodes to the right of $n_{i}$ at depth $i .$
+    \begin{equation}
+      \begin{aligned}
+        n_1 &= \min (l_2, n_2, r_2) \\
+        &= \min (l_2, \max(l_3,n_3,r_3), r_2) \\
+        &= \min (l_2, \max(l_3,\min(\max(\ldots,\min(l_j,n_j,r_j) ,\ldots)),r_3), r_2) 
+      \end{aligned}
+    \end{equation}
+    In order to let $n_j$ make a difference on $n_1$, it has to be hold that
+    \begin{equation}
+      \max(l_{j-1},l_{j-3},\ldots,l_3) < n_j < \min(l_j, l_{j-2},\ldots,l_2)
+    \end{equation}
+    Similarly, if $n_i$ is an odd number, 
+    \begin{equation}
+      \max(l_{j},l_{j-2},\ldots,l_3) < n_j < \min(l_{j-1}, l_{j-3},\ldots,l_2)
+    \end{equation}
+    Let $\alpha = \max(l_{3},l_{5},\ldots)$, denoting the best option of maximum value on $n_i$'s path to root, and let $\beta = \min(l_2, l_4, \ldots)$, denoting the best option of minimum value on $n_i$'s path to root. 
+    
+    It can be shown that during exploration, if $n_i \le \alpha$ or $n_i \ge \beta$, we can prune $n_i$.
 
-    }
-    \item {
-      
-    }
-    \item {
-      
-    }
-    \item {
-      
-    }
-  \end{enumerate}
-  \end{solution}
+  \end{itemize}
+  \end{proof}
   \label{ex4}
 \end{exercise}
