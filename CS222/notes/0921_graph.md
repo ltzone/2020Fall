@@ -471,7 +471,7 @@ Define S* to be an optimal schedule that has the fewest number of inversions, an
 
 #### Analysis
 
-**Def [Reduced Eviction Schedules]**. A **reduced** schedule is a schedule that only inserts an item into the cache in a step in which that item is requested.
+**Def [Reduced Eviction Schedules]**. A **reduced** schedule is a schedule that only inserts an item into the cache in a step in which that item is requested. (evict次数是一样的)
 
 ![](img/09-21-15-38-30.png)
 
@@ -481,3 +481,60 @@ Pf. [by induction on number of unreduced items]
 - Suppose S brings d into the cache at time t, without a request. 
 - Let c be the item S evicts when it brings d into the cache. 
   - Case 1: d evicted at time t', before next request for d.
+  - ![](img/09-28-13-06-11.png)
+  - Case 2: d requested at time t' before d is evicted. 
+  - ![](img/09-28-13-06-20.png)
+  
+**Theorem.** FF is optimal eviction algorithm.
+**Invariant**  There exists an optimal reduced schedule $S$ that makes the same eviction schedule as $S_{F F}$ through the first $j$ requests.
+Pf. [by induction on $j]$
+Let $S$ be reduced schedule that satisfies invariant through $j$ requests. We produce $S^{\prime}$ that satisfies invariant after $j+1$ requests.
+- Consider $(j+1)^{\text {st }}$ request $d=d_{j+1}$. 
+- Since $S$ and $S_{F F}$ have agreed up until now, they have the same cache contents before request $j+1 .$
+- Case $1:\left(d\right.$ is already in the cache). $S^{\prime}=S$ satisfies invariant.
+- Case $2:\left(d\right.$ is not in the cache and $S$ and $S_{F F}$ evict the same element). $S^{\prime}=S$ satisfies invariant.
+- Case $3:\left(d\right.$ is not in the cache and $S$ evicts $f$; and $S_{F F}$ evicts $e \neq f$ (*minimal counterexample principle*)
+  - *We want to show: depite the difference, evicting $e$ will not be worse than $f$.*
+  - begin construction of $S'$ from $S$ by evicting $e$ instead of $f$
+  - ![](img/09-28-13-11-27.png)
+  - now $S^{\prime}$ agrees with $S_{F F}$ on first $j+1$ requests; we show that having element $f$ in cache is no worse than having element $e$
+  - let $S^{\prime}$ behave the same as $S$ until $S^{\prime}$ is forced to take a different action
+    (because either $S$ evicts $e$; or because either $e$ or $f$ is requested)
+
+> We show that under this case, we can still coonstruct an optimal schedule $s'$ based on $S$ and reduced transformation lemma (invariant)
+
+Let $j^{\prime}$ be the first time after $j+1$ that $S^{\prime}$ must take a different action (*involves e or f or both*) from $S$, and let $g$ be item requested at time $j^{\prime}$
+![](img/09-28-20-29-13.png)
+
+- case 3a: $ g=e$
+  - Can't happen with FF since there must be a request for $f$ before $e$.
+- case 3b: $g=f$ Element $f$ can't be in cache of $S$, so let $e^{\prime}$ be the element that $S$ evicts.
+  - if $e^{\prime}=e, S^{\prime}$ accesses $f$ from cache; now $S$ and $S^{\prime}$ have same cache
+  - if $e^{\prime} \neq e$, we make $S^{\prime}$ evict $e^{\prime}$ and brings e into the cache;
+    now $S$ and $S^{\prime}$ have the same cache 
+  - We let $S^{\prime}$ behave exactly like $S$ for remaining requests.
+  - (*S' is no longer reduced, but can be transformed into a reduced schedule that agrees with SFF through step j+1*)
+
+- Case 3c: $g \neq e, f . \quad S$ evicts $e$
+  - Make $S^{\prime}$ evict $f$
+  - ![](img/09-28-20-31-03.png)
+  - now $S$ and $S^{\prime}$ have the same cache 
+  - We let $S^{\prime}$ behave exactly like $S$ for remaining requests.
+
+## Caching Perspective
+
+Online vs. offline algorithms.
+- Offline: full sequence of requests is known a priori. 
+- Online (reality): requests are not known in advance. 
+- Caching is among most fundamental online problems in CS.
+
+**LIFO**. Evict page brought in most recently.
+**LRU**. Evict page whose most recent access was earliest.
+  - FIF with direction of time reversed!
+
+**Theorem**. FF is optimal offline eviction algorithm.
+- Provides basis for understanding and analyzing online algorithms. 
+- LRU is k-competitive. [Section 13.8]
+- LIFO is arbitrarily bad.
+
+For any online caching (Randomized) algorithm, the nu mber of misses it incurs on any sequence 𝜎 is at most 𝑘⋅𝑓(𝜎) +𝑘.Theexpectednumberofmissesisatmost 𝑂(log𝑘) ⋅ 𝑓 𝜎 . Here 𝑓 (𝜎) is the cost of optimal offline algorithm
