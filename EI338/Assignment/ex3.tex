@@ -1,0 +1,126 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 1   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{In a server farm such as that used by Amazon or eBay, a single failure does not cause the entire system to crash. Instead, it will reduce the number of requests that can be satisfied at any one time.
+  \begin{itemize}
+    \item [1)]
+     If a company has 10,000 computers, each with a MTTF of 35 days, and it experiences catastrophic failure only if 1/3 of the computers fail, what is the MTTF for the system?
+    \item [2)]
+     If it costs an extra 1000 dollars, per computer, to double the MTTF, would this be a good business decision? Show your work.
+    \item [3)]
+     Figure 1.3 shows,on average, the cost of downtimes, assuming that the cost is equal at all times of the year. For retailers, however, the Christ-mas season is the most profitable (and therefore the most costly time to lose sales). If a catalog sales center has twice as much traffic in the fourth quarter as every other quarter, what is the average cost of downtime per hour during the fourth quarter and the rest of the year?
+  \end{itemize}}
+  \begin{solution}
+  \par{~}
+  \begin{enumerate}
+    \item {
+      Assume that the failure of the computers are independent, then the failure rate of the current system is equivalent to a system with three computers, failing only if one of them fails.
+      \begin{equation}
+        \text{MTTF} = \frac{1}{\frac{1}{35} + \frac{1}{35} + \frac{1}{35}} = \frac{35}{3} = 11.67 \text{ days}
+      \end{equation}
+      Hence the MTTF for the system is 11.67 days.
+    }
+    \item {
+      Yes. After upgrading, the MTTF for the system will be 23.33 days, and the frequency of the need to repair a broken device will improve from every 5 minutes to every 10 minutes. Desipite the huge initial costs, it will greatly save the damage of catastrophic failure and the labour of repairment in the long run.
+    }
+    \item {
+      The average cost of downtime per hour for the rest of the year is $90,000 \times \frac{4}{5} = 72,000$, and the cost during the fourth quarter is $144,000$
+    }
+  \end{enumerate}
+  \end{solution}
+  \label{ex1}
+\end{exercise}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 2   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{When parallelizing an application, the ideal speedup is speeding up by the number of processors. This is limited by two things: percent-age of the application that can be parallelized and the cost of communication. Amdahl's law takes into account the former but not the latter.
+  \begin{itemize}
+    \item [1)]
+  What is the speedup with N processors if 80\% of the application
+  is parallelizable, ignoring the cost of communication?
+    \item [2)]
+  What is the speedup with 8 processors if, for every processor
+  added, the communication overhead is 0.5\% of the original execution time.
+    \item [3)]
+    What is the speedup with 8 processors if, for every time the num-
+  ber of processors is doubled,the communication overhead is increased by
+  0.5\% of the original execution time?
+    \item [4)]
+    What is the speedup with N processors if, for every time the
+  number of processors is doubled, the communication overhead is increased
+  by 0.5\% of the original execution time?
+    \item [5)]
+    Write the general equation that solves this question: What is the
+  number of processors with the highest speedup in an application in which P\%
+  of the original execution time is parallelizable, and, for every time the num-
+  ber of processors is doubled,the communication is increased by 0.5\% of the
+  original execution time?
+  
+  \end{itemize}}
+  \begin{solution}
+  \par{~}
+  \begin{itemize}
+    \item $\text{SpeedUp} = \frac{1}{0.2 + \frac{0.8}{N}}$
+    \item $\text{SpeedUp} = \frac{1}{0.2 + \frac{0.8}{8} + 8 \times 0.005} = \frac{1}{0.34} = 2.941$
+    \item $\text{{SpeedUp}} = \frac{1}{0.2 + \frac{0.8}{8} + 3 \times 0.005} = \frac{1}{0.315} = 3.175$
+    \item $\text{{SpeedUp}} = \frac{1}{0.2 + \frac{0.8}{N} + \log_{2}N \times 0.005}$
+    \item {
+      \begin{equation}
+        \text{SpeedUp} = \frac{1}{1-P\% + \log_{2}N \times 0.005 + \frac{P\%}{N}}
+      \end{equation}
+      The optimal speed up rate can be obtained when $\frac{\partial \text{SpeedUp}}{\partial N} = 0$.
+      \begin{equation}
+        \begin{aligned}
+          \frac{\frac{0.005}{N \ln 2} - \frac{P\%}{N^2}}{\left(1-P\% + \log_{2}N \times 0.005 + \frac{P\%}{N}\right)^2} &= 0 \\
+          N &= 2P \ln 2
+        \end{aligned}
+      \end{equation}
+    }
+  \end{itemize}
+  \end{solution}
+  \label{ex2}
+\end{exercise}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 3   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{What is the purpose of system calls?   }
+  \begin{solution}
+  To provide programmers with an interface to the services provided by the OS, in order to improve programmers' productivity and also protect the operating system from being abused.
+
+  Typical uses involve controlling processes, managing files and devices, maintaining system information, communication and managing accesses.
+  \end{solution}
+  \label{ex3}
+\end{exercise}
+
+
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 4   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{What is the purpose of the command interpreter? Why is it usually
+  separate from the kernel?}
+  \begin{solution}
+    \par{~}
+    Command interpreter takes in the commands provided by the opearting system user. It then understands the commands and executes them through system calls or external programs. With the form of textlines, it is easy to implement and light to use.
+
+    Command interpreter is typically separated from the kernel firstly because command lines are mutable. Users can customize the input command through arguments. It doesn't make sense to integrate such great variety into the kernel. Besides, exposing the kernel to users directly through command interpreters will make the system vulnerable to errors. Therefore, command interpreter should be separated for flexibility and security concerns.
+  \end{solution}
+  \label{ex4}
+\end{exercise}
