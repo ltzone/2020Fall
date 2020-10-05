@@ -1,5 +1,5 @@
 ---
-title: 【Artificial Intelligence】Adversarial Search
+title: 【Artificial Intelligence】3-2 Adversarial Search
 url: ai-adversarial
 date: 2020-09-25 10:01:04
 tags: 
@@ -106,6 +106,9 @@ every node will maintain a `MaxNode(alpha,  v)` or `MinNode(beta, v)` value, and
 > alpha is the value of the best(i.e. highest) choice found so far at any choice point along the path for max
 > if v is worse than alpha, max will avoid it, i.e. prune that max-branch
 
+
+![](img/09-29-14-14-06.png)
+
 ### Optimization
 
 Good child ordering improves effectiveness of pruning
@@ -116,4 +119,37 @@ With “perfect ordering”:
 - Full search of, e.g. chess, is still hopeless...
 
 We can compute how to compute. **metareasoning**
+
+
+### Resource Limits
+
+资源受限，难以搜到底层
+Solution：
+- 设计启发式，evaluation function for non-terminal positions 
+  - (can be aquired through DL)
+- Use iterative deepening for an anytime algorithm
+- **Threats.** dangling agents for small number of iterations and bad design of heuristics
+
+### Evaluation Functions
+
+- Evaluation functions score non-terminals in depth-limited search
+  ![](img/09-29-14-21-18.png)
+- Ideal function: returns the actual minimax value of the position 
+- In practice: typically weighted linear sum of features:
+  $$
+  \operatorname{Eval}(s)=w_{1} f_{1}(s)+w_{2} f_{2}(s)+\ldots+w_{n} f_{n}(s)
+  $$
+- e.g. $f_1(s)=(\text{num of white queens} - \text{num of black queens})$, etc
+
+> Evaluation functions are always imperfect, and diminishes as depth grows
+> Tradeoff between complexity of features and complexity of computation
+
+### Synergies between evaluation function and alpha-beta
+- Evaluation function provide guidance to expand most promising nodes first
+  - somewhat similar to A*, CSP filtering
+- If evaluation function provides upper-bound for min-node/lower bound on max-node, then can prune
+  - somewhat similar to A* consistency
+
+
+
 
