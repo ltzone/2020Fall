@@ -1,0 +1,271 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 1   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Given an integer array, please use the divide and conquer algorithm to find the reverse pair in the sequence.}
+  \begin{solution} See Algorithm \ref{al:ex1}.
+
+  \begin{algorithm}[H]
+    \KwIn{Integer Array $S$}
+    \KwOut{Reverse Pair Count $R$}
+    \BlankLine
+    \SetKwFunction{FMain}{Main}
+    \SetKwFunction{FRec}{ReversePair}
+    \SetKwProg{Fn}{Function}{:}{\KwRet{$R$}}
+    \Fn{\FRec{$S$, $lptr$, $rptr$}}{
+        $mid = (lptr + rptr)/2$\;
+        Initialize $R = 0$ \;
+        call \FRec{$S$, $lptr$, $mid$} and add result to $R$ \;
+        call \FRec{$S$, $mid+1$, $rptr$} and add result to $R$ \;
+        $i = lptr, j = mid+1$\;
+        \While{$i \le mid$ and $j \le rptr$}{
+            \eIf{$S[i] \le S[j]$}
+            {
+                append $S[i]$ to $newS$\;
+                $i = i + 1$\;
+            }
+            {
+                append $S[j]$ to $newS$\;
+                $j = j + 1$\;
+                $R = R + mid - i + 1$ \;
+            }
+        }
+        append rest of the elements in $S$ to $newS$\;
+        replace $S$ by $newS$\;
+    }
+
+    \SetKwProg{Pn}{Function}{:}{\KwRet $R$}
+    \Pn{\FMain{S}}{
+        $lptr = 0$, $rptr = $ length of $S - 1$\;
+        $R$ = \FRec{$S$, $lptr$, $rptr$} \;
+    }
+
+    \caption{Find Reverse Pair \label{al:ex1}}
+  \end{algorithm}
+  \end{solution}
+  \label{ex1}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 2   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Given any positive integers $K$ and $M$, find the $K$-th largest element and the $M$-th smallest element in the unsorted array. Please note that you need to find the $K$-th largest element, and the $M$-th smallest element after the array is sorted, not different elements.}
+  \begin{solution}
+  \par{~} For $K$ and $M$ sufficiently smaller than number of elements $N$, the problem can be solved within $O(N \log K + N \log M)$ runtime with $O(K+M)$ space, see algorithm \ref{al:ex2} and \ref{al:ex2-1}.
+
+  \begin{algorithm}[H]
+    \KwIn{Unsorted array $S$ of $N$ elements}
+    \KwOut{The $K$-th largest element}
+    \BlankLine
+    Initialize a priority queue (min-heap) $Q$ \;
+    \ForEach{$n \in S$}{
+        push $n$ into $Q$\;
+        \If{size of $Q > K$}{
+            pop the top-element in $Q$\;
+        }
+    }
+    \Return{the top-element in $Q$}
+    \caption{Find K-th largest element \label{al:ex2}}
+  \end{algorithm}
+
+  \begin{algorithm}[H]
+    \KwIn{Unsorted array $S$ of $N$ elements}
+    \KwOut{The $M$-th smallest element}
+    \BlankLine
+    Initialize a priority queue (max-heap) $Q$ \;
+    \ForEach{$n \in S$}{
+        push $n$ into $Q$\;
+        \If{size of $Q > M$}{
+            pop the top-element in $Q$\;
+        }
+    }
+    \Return{the top-element in $Q$}
+    \caption{Find M-th smallest element \label{al:ex2-1}}
+  \end{algorithm}
+  \end{solution}
+  \label{ex2}
+\end{exercise}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 3   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Given an array of linked lists, and the lists have been sorted in descending order. Please merge all linked lists into an ascending list and return the merged list.}
+  \begin{solution} The solution is to use a max-heap to efficiently maintain the frontier of the merge, see Algorithm \ref{al:ex3}.
+    \begin{algorithm}[H]
+      \KwIn{An $K$-element array of descending sorted linked lists $L$}
+      \KwOut{The merged list $R$ in ascending order}
+      \BlankLine
+      Initialize a max-heap $Q$, an empty linked list $R$\;
+      Remove the head of all linked lists (if exist) and push them, together with their index in the array $\left\langle n, i \right\rangle$ into $Q$ (according to $n$) \;
+      \While{the top-element of $Q$ is not empty}{
+          pop the top-element $\left\langle n, i \right\rangle$ from $Q$\;
+          append $n$ to the head of $R$\;
+          \If{$L[i]$ is not empty}{
+              remove the head of $L[i]$ and push the head value, together with the array index into $Q$ \;
+          }
+      }
+      \Return{$R$}
+      \caption{Merge k sorted linked lists \label{al:ex3}}
+    \end{algorithm}
+  \end{solution}
+  \label{ex3}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 4   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Given an array a, if $i \leq j$ and $a[i] \leq a[j] + 1$ and $j == i+1$, we call $(i, j)$ an important flip pair. Please return the number of significant flip pairs in a given array.}
+  \begin{solution}
+    See Algorithm \ref{al:ex4}.
+
+    \begin{algorithm}[H]
+      \KwIn{Array $A$}
+      \KwOut{Number of important flip pair $n$}
+      \BlankLine
+      Initialize $n=0$ \;
+      \For{$i=0:A.size - 2$}{
+          \If{$A[i] \le A[i+1] + 1$}{
+              $n = n + 1$ \;
+          }
+      }
+      \Return{n}
+      \caption{Find important flip pair \label{al:ex4}}
+    \end{algorithm}
+  \end{solution}
+  \label{ex4}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 5   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Please write an efficient algorithm to search for a target value target in the $m \times n$ matrix. The matrix has the following characteristics:
+    \begin{enumerate}
+    \item
+    The elements of each row are arranged in descending order from left to right.
+    \item
+    The elements of each column are arranged in ascending order from top to bottom.
+    \end{enumerate}}
+  \begin{solution}
+  See algorithm \ref{al:ex5}.
+
+  \begin{algorithm}[H]
+    \KwIn{An $m \times n$ sorted matrix $A$}
+    \KwOut{one position of the target value $\left\langle i,j \right\rangle$}
+    \BlankLine
+
+    \SetKwFunction{FMain}{Main}
+    \SetKwFunction{FRec}{FindRec}
+    \SetKwProg{Fn}{Function}{:}{\KwRet{None}}
+    \Fn($\left\langle i_1, j_1 \right\rangle$ indicates the top-left corner of the search range,$\left\langle i_2, j_2 \right\rangle$ indicates the bottom-right corner ){\FRec{$A$, $i_1$,$i_2$,$j_1$,$j_2$}}{
+        \If{$i_1 > i_2$ or $j_1 > j_2$}{\KwRet{None}}
+        $i_{mid} = (i_1 + i_2)/2$,       $j_{mid} = (j_1 + j_2)/2$\;
+        \If{$A[i_{mid}][j_{mid}] = target$}{
+            \KwRet{$\left\langle i_{mid}, j_{mid} \right\rangle$}
+        }
+        \eIf{$A[i_{mid}][j_{mid}] < target$}{
+            call \FRec{$A$, $i_1$, $i_2$, $j_1$, $j_{mid}$} and \KwRet if result is not None\;
+            call \FRec{$A$, $i_{mid}$, $i_{2}$, $j_{mid}+1$, $j_2$} and \KwRet if result is not None\;
+        }{
+            call \FRec{$A$, $i_1$, $i_{mid}$, $j_1$, $j_{2}$} and \KwRet if result is not None\;
+            call \FRec{$A$, $i_{mid}+1$, $i_{2}$, $j_{mid}$, $j_{2}$} and \KwRet if result is not None\;
+        }
+    }
+
+    \SetKwProg{Pn}{Function}{:}{\KwRet $R$}
+    \Pn{\FMain{S}}{
+        $R$ = \FRec{$S$, $0$, $0$, $m-1$, $n-1$} \;
+    }
+    \caption{Find target value \label{al:ex5}}
+  \end{algorithm}
+  \end{solution}
+  \label{ex5}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 6   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{\textit{Quicksort} is based on the Divide-and-Conquer method. Here is the two-step divide-and-conquer process for sorting a typical subarray $A[p \ldots r]$:
+    \begin{enumerate}
+
+    	\item
+    	\textbf{Divide:} Partition the array $A[p \ldots r]$ into two subarrays $A[p \ldots q-1]$ and $A[q+1 \ldots r]$ such that each element of $A[p \ldots q-1]$ is less than or equal to $A[q],$ which is, in turn, less than or equal to each element of $A[q+1 \ldots r].$ Compute the index $q$ as part of this partitioning procedure.
+    	
+    	\item
+    	\textbf{Conquer:} Sort $A[p \ldots q-1]$ and $A[q+1 \ldots r]$ respectively by recursive calls to Quicksort.
+    	
+    \end{enumerate}
+    Write down the recurrence function $T(n)$ of QuickSort and compute its time complexity.
+
+    {\color{purple}Hint: At this time $T(n)$ is split into two subarrays with different sizes (usually), and you need to describe its recurrence relation by the sum of two subfunctions plus additional operations.}
+}
+  \begin{solution}
+    For array $A$ of the size $N$, we first need to traverse the array and do the partition, which will cost $cN$ time. The recursion will take $T(i-1)$ and $T(N-i-1)$ time for elements smaller than the pivot and greater than the pivot, where $T(n)$ is the time taken for $n$ inputs.
+
+  For average case, we can take the average of every possible dividing case. The partition of $N$ elements can be $\left\{0,N-1\right\}$, $\left\{1,N-2\right\}$, $\ldots$ , $\left\{N-1,0\right\}$. Hence we have
+  \begin{equation}
+      T(N) = 2\left(\frac{T(0)+T(1)+\ldots+T(N-1)}{N}\right) + cN
+  \end{equation}
+  \begin{equation}
+    NT(N) = 2\left({T(0)+T(1)+\ldots+T(N-1)}\right) + cN^2
+    \label{eqn1}
+  \end{equation}
+  \begin{equation}
+    (N-1)T(N-1) = 2\left({T(0)+T(1)+\ldots+T(N-2)}\right) + c(N-1)^2
+    \label{eqn2}
+  \end{equation}
+  By subtracting Equation \ref{eqn2} from Equation \ref{eqn1} we have
+  \begin{equation}
+    NT(N) - (N-1)T(N-1) = 2T(N-1) + 2cN - c^2
+  \end{equation}
+  Since constant $c^2$ can be ignored
+  \begin{equation}
+    \begin{aligned}
+      NT(N) &= (N+1)T(N-1) +2cN \\
+      \frac{T(N)}{N+1} &= \frac{T(N-1)}{N} + \frac{2c}{N+1} \\
+      \frac{T(N-1)}{N} &= \frac{T(N-2)}{N-1} + \frac{2c}{N} \\
+      \ldots & \ldots \\
+      \frac{T(2)}{3} &= \frac{T(1)}{2} + \frac{2c}{3}
+    \end{aligned}
+    \label{eqn3}
+  \end{equation}
+  By taking the sum of Equation \ref{eqn3} together, we have
+  \begin{equation}
+    \begin{aligned}
+      T(N) &= (N+1)\left(\frac{T(1)}{2} + 2c \sum_{i=3}^{N+1}\frac{1}{i}\right) \\
+      &\le (N+1)2c \ln N \in O(N\log N)
+    \end{aligned}
+  \end{equation}
+  For best case, all partitions are perfect $\{N/2, N/2\}$,
+  \begin{equation}
+    \begin{aligned}
+        T(N) &= 2T(\frac{N}{2}) + cN \\
+        &= 4T(\frac{N}{4}) + 2cN \\
+        &= \ldots = NT(1) + \log_2{N} \cdot c N \in O(N\log N)
+    \end{aligned}
+  \end{equation}
+  For worst case, assume all partitions are $\{0, N-1\}$,
+  \begin{equation}
+      \begin{aligned}
+          T(N) &= T(N-1) + cN \\
+          &= T(N-2) + c(N-1) + cN \\
+          &= \ldots = c (1 + 2 + \ldots + N) \in O(N^2)
+      \end{aligned}
+  \end{equation}
+  \end{solution}
+  \label{ex6}
+\end{exercise}
