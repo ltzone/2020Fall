@@ -16,7 +16,7 @@ typedef struct edge Edge;
 
 class DisjointSet {
 private:
-    int size;
+    int ds_size;
     int *parent;
 public:
     DisjointSet(int s) ;
@@ -27,9 +27,9 @@ public:
 
 DisjointSet::DisjointSet(int n)
 {
-    size = n;
-    parent = new int [size];
-    for (int i=0; i<size; ++i) parent[i] = -1;
+    ds_size = n;
+    parent = new int [ds_size];
+    for (int i=0; i<ds_size; ++i) parent[i] = -1;
 }
 
 int DisjointSet::Find(int x)
