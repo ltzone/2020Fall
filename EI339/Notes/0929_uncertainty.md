@@ -1,5 +1,5 @@
 ---
-title: 【Artificial Intelligence】4-1 Uncertainty and Utilities
+title: 【Artificial Intelligence】4 Uncertainty and Utilities
 url: ai-uncertainty
 date: 2020-09-29 14:34:26
 tags: 
