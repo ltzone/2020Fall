@@ -191,3 +191,36 @@ $$
 > Claim. the k-iteration will approach the optimal policy
 
 
+## Value Iteration
+
+> 1. Start with $V_0 (s) = 0$: no time steps left means an expected reward sum of zero 
+> 2. Given vector of $V_k(s)$ values, do one ply of expectimax from each state:
+>    $$
+>    V_{k+1}(s) \leftarrow \max_{a} \sum_{s'} T(s,a,s') \left[R(s,a,s')+\gamma V_k(s')\right]
+>    $$
+> 3. Repeat until convergence
+
+Complexity $O(S^2 A)$
+
+**Theorem**: will converge to unique optimal values
+- Basic idea: approximations get refined towards optimal values 
+> Since the policy is completely dependent on values, it is equivalent that the policy is approximating optimality
+- A further view: Policy may converge long before values do
+
+![](img/10-16-10-35-50.png)
+
+
+### Convergence
+
+How do we know the $V_k$ vectors are going to converge? 
+- Case 1: If the tree has maximum depth M, then $V_M$ holds the actual untruncated values
+- Case 2: If the discount is less than 1
+  - Sketch: For any state $V_k$ and $V_{k+1}$ can be viewed as depth $k+1$ expectimax results in nearly identical search trees
+  - The difference is that on the bottom layer, $V_{k+1}$ has actual rewards while $V_k$ has zeros
+  - That last layer is at best all $R_{MAX}$
+  - It is at worst $R_{MIN}$
+  - But everything is discounted by $\gamma^k$ that far out
+  - So $V_k$ and $V_{k+1}$ are at most $\gamma^k \max |R|$ different
+  - So as k increases, the values converge
+
+> With the bounded reward and $\gamma <1$, we can make sure that the iteration will converge
