@@ -1,0 +1,154 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 1   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{How many kinds of instructions? What is the role of each one?}
+  \begin{solution} There are three kinds of instructions.
+  
+    \begin{enumerate}
+        \item \textbf{Data movement instructions } They move data from a memory location or register to another memory location or register without changing its form.
+        \item \textbf{Arithmetic and logic (ALU) instructions } They change the form of one or more operands to produce a result stored in another location. Typical instructions involve \texttt{Add, Sub, Shift,} etc.
+        \item \textbf{Branch instructions (control flow instructions) } They alter the normal flow of control from executing the next instruction in sequence.
+    \end{enumerate}
+
+\end{solution}
+  \label{ex1}
+\end{exercise}
+    
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 2   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{How many kinds of ISAs? What are the advantages and disadvantages of each ISA?
+    }
+  \begin{solution}
+  \par{~}
+
+\begin{enumerate}
+    \item Stack Architecture
+        \begin{itemize}
+            \item Advantages
+            \begin{itemize}
+                \item The machine code is dense since the operands will be stored in a fixed location and need not be specified
+                \item Low hardware requirements
+                \item Its compiler is easy to implement
+            \end{itemize}
+            \item Disadvantages
+            \begin{itemize}
+                \item Stack becomes the bottleneck and there is little potential for parallelism or pipelining
+                \item Since data is not always at the top of stack when needed, so additional instructions like \texttt{TOP} and \texttt{SWAP} are needed.
+                \item It is difficult to write an optimizing compiler for stack architectures
+            \end{itemize}
+        \end{itemize}
+
+
+
+    \item Accumulator Architecture
+    \begin{itemize}
+        \item Advantages
+        \begin{itemize}
+            \item Its hardware requirements are very Low
+            \item It is easy to design and understand
+        \end{itemize}
+        
+        \item Disadvantages
+        \begin{itemize}
+            \item There is heavy memory traffic
+            \item The accumulator will become the bottleneck and there is little potential for parallelism and pipelining
+        \end{itemize}
+    \end{itemize}
+
+    \item Memory Memory Architecture
+    \begin{itemize}
+        \item Advantages
+        \begin{itemize}
+            \item Its instruction codes are compact
+            \item Its compiler is easy to implement
+        \end{itemize}
+        
+        \item Disadvantages
+        \begin{itemize}
+            \item There is very heavy memory traffic
+            \item The clock cycle of every instruction will vary.
+            \item With two operands, more data movements are required
+        \end{itemize}
+    \end{itemize}
+
+    \item Register-Memory Architectures
+    \begin{itemize}
+        \item Advantages
+        \begin{itemize}
+            \item Some data can be accessed without loading first
+            \item The instruction format is easy to encode
+            \item Good code density
+        \end{itemize}
+        
+        \item Disadvantages
+        \begin{itemize}
+            \item Since operands can either be registers or memory addresses, they are not equivalent.
+            \item The number of clocks per instruction may vary
+            \item Number of registers will be limited
+        \end{itemize}
+    \end{itemize}
+
+    \item Load Store Architectures
+    \begin{itemize}
+        \item Advantages
+        \begin{itemize}
+            \item The instruction encoding is simple and fixed in length.
+            \item Instructions will take similar number of cycles.
+            \item They are relatively easy to pipeline.
+        \end{itemize}
+        
+        \item Disadvantages
+        \begin{itemize}
+            \item Higher instruction count.
+            \item Not all instructions need three operands, the instruction format may be redundant.
+            \item Dependent on good compiler
+        \end{itemize}
+    \end{itemize}
+
+\end{enumerate}
+
+
+
+  \end{solution}
+  \label{ex2}
+\end{exercise}    
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 3   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{MIPS architecture provides 32 GPRS (general purpose register). What is the function of each register?  }
+  \begin{solution}
+  \par{~}
+
+\begin{table}[htbp]
+    \begin{tabular}{@{}lll@{}}
+    \toprule
+    \multicolumn{1}{c}{\textbf{Register   Number}} & \multicolumn{1}{c}{\textbf{Conventional Name}} & \multicolumn{1}{c}{\textbf{Usage}}                                 \\ \midrule
+    \$0                                            & \$zero                                         & Hard-wired to 0                                                    \\
+    \$1                                            & \$at                                           & Reserved for pseudo-instructions                                   \\
+    \$2 - \$3                                        & \$v0, \$v1                                       & Return values from functions                                       \\
+    \$4 - \$7                                        & \$a0 - \$a3                                      & Arguments to functions - not preserved by subprograms              \\
+    \$8 - \$15                                       & \$t0 - \$t7                                      & Temporary data, not preserved by subprograms                       \\
+    \$16 - \$23                                      & \$s0 - \$s7                                      & Saved registers, preserved by subprograms                          \\
+    \$24 - \$25                                      & \$t8 - \$t9                                      & More temporary registers, not preserved by subprograms             \\
+    \$26 - \$27                                      & \$k0 - \$k1                                      & Reserved for kernel. Do not use.                                   \\
+    \$28                                           & \$gp                                           & Global Area Pointer (base of global data segment)                  \\
+    \$29                                           & \$sp                                           & Stack Pointer                                                      \\
+    \$30                                           & \$fp                                           & Frame Pointer                                                      \\
+    \$31                                           & \$ra                                           & Return Address                                                     \\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+  \end{solution}
+  \label{ex3}
+\end{exercise}
