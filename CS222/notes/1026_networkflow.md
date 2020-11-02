@@ -11,6 +11,12 @@ categories:
 ---
 
 
+Augmentation path
+- For any implementation, if the maximum capacity is $C$, then the runtime is $O(MC)$, where $M$ is the cost of every augmentation, due to the integral values
+- capacity scaling
+- shortest path
+- blocking flow (based on layer graph, so that backward edges will be avoided AMAP)
+
 <!--more-->
 
 [toc]
