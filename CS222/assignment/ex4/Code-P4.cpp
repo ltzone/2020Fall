@@ -36,38 +36,42 @@ public:
             int val = dp[i][j];
             int take_right = min(dp[i][j-2],dp[i+1][j-1]);
             int take_left = min(dp[i+2][j],dp[i+1][j-1]);
-            if (val == take_right + v[j]){
+            if (val == (take_right + v[j])){
                 trace.push_back(v[j]);
                 if (dp[i][j-2] < dp[i+1][j-1]){
                     j-=2;
                 } else {
                     i++;j--;
                 }
-            } else if (val == take_left + v[i]){
+            // } else if (val == (take_left + v[i])){
+            } else {
                 trace.push_back(v[i]);
                 if (dp[i+2][j] < dp[i+1][j-1]){
-                    j+=2;
+                    i+=2;
                 } else {
                     i++;j--;
                 }
             }
-        };
+        }
         if (i == j){
             trace.push_back(v[i]);
-            return vector<int>(trace.rbegin(),trace.rend());
+            return trace;
+            // return vector<int>(trace.rbegin(),trace.rend());
         } else{
             trace.push_back(max(v[i], v[j]));
-            return vector<int>(trace.rbegin(),trace.rend());
+            return trace;
+            // return vector<int>(trace.rbegin(),trace.rend());
         }
     }
 };
 
 int main(){
-    // int a[] = {8,15,3,7};
-    // vector<int> test1(a, a+4);
+    // int a[] = {8,15,3,7,14,5,7,1};
+    // vector<int> test1(a, a+8);
     vector<int> input;
     ifstream f("testcase/Data-P4.txt");
     while (! f.eof()){
+    // while (input.size()<100){
         int a;
         f >> a;
         input.push_back(a);
