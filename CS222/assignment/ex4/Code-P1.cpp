@@ -3,9 +3,14 @@
 #include<fstream>
 using namespace std;
 
-pair<int,int> preprocess(vector<int> & s){
+
+
+static int* now = new int[10000000];
+static int* prev_col = new int[10000000];
+
+pair<int,int> preprocess(int* s, int len){
     int sum = 0;
-    for (int i=0; i<s.size(); ++i){
+    for (int i=0; i<len; ++i){
         if (s[i] < 0){
             s[i] = -s[i];
         }
@@ -15,44 +20,41 @@ pair<int,int> preprocess(vector<int> & s){
     return pair<int,int>(sum,goal);
 }
 
-int knapsack(vector<int> & s, int goal){
-    vector<int> now(goal+1,0);
-    vector<int> prev(goal+1,0);
-    for (int i=0;i<s.size();++i){
-        for (int w=0; w<=goal;++w){
+int knapsack(int* s, int goal, int len){
+    for (int i=0;i<=goal;++i){
+        now[i] = 0;
+    }
+    for (int i=0;i<len;++i){
+        for (int w=1; w<=goal;++w){
             if (s[i] > w) {
-                now[w] = prev[w];
+                now[w] = prev_col[w];
             } else {
-                now[w] = max(prev[w], s[i]+prev[w-s[i]]);
+                now[w] = max(prev_col[w], s[i]+prev_col[w-s[i]]);
             }
         }
         for (int w=0; w<=goal;++w){
-            prev[w] = now[w];
+            prev_col[w] = now[w];
         }
     }
-    return prev[goal];
+    return prev_col[goal];
 }
 
-int solve(vector<int> &s){
-    pair<int,int> a = preprocess(s);
+int solve(int* s, int len){
+    pair<int,int> a = preprocess(s,len);
     int goal = a.second;
     int sum = a.first;
-    int achieve = knapsack(s,goal);
+    int achieve = knapsack(s,goal,len);
     return (sum-achieve-achieve);
 }
 
 
 int main(){
-    int a[] = {1,-6,11,-5};
-    vector<int> test1(a, a+4);
-    vector<int> input;
     ifstream f("testcase/Data-P1.txt");
-    while (! f.eof()){
-        int a;
-        f >> a;
-        input.push_back(a);
+    int tmp[10000];
+    for (int i=0;i<10000;++i){
+        f >> tmp[i];
     }
-    cout << solve(test1) << endl;;
+    cout << solve(tmp,10000) << endl;;
     return 0;
 
 }

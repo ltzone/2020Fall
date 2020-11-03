@@ -27,22 +27,22 @@ int bookshelf(vector<int> & thick, vector<int> & width){
 
 int main(){
 
-    // ifstream f("testcase/Data-P2.txt");
-    // int len;
-    // f >> len;
-    // vector<int> thick;
-    // vector<int> width;
-    // for (int i=0;i<len;++i){
-    //     int t, w;
-    //     f >> t >> w;
-    //     thick.push_back(t);
-    //     width.push_back(w);
-    // }
+    ifstream f("testcase/Data-P2.txt");
+    int len;
+    f >> len;
+    vector<int> thick;
+    vector<int> width;
+    for (int i=0;i<len;++i){
+        int t, w;
+        f >> t >> w;
+        thick.push_back(t);
+        width.push_back(w);
+    }
 
-    int thick_in[] = {1,1,2,2,1};
-    int width_in[] = {12,3,15,5,1};
-    vector<int> thick(thick_in, thick_in + 5);
-    vector<int> width(width_in, width_in + 5);
+    // int thick_in[] = {1,1,2,2,1};
+    // int width_in[] = {12,3,15,5,1};
+    // vector<int> thick(thick_in, thick_in + 5);
+    // vector<int> width(width_in, width_in + 5);
     cout << bookshelf(thick,width) << endl;
     return 0;
 }
