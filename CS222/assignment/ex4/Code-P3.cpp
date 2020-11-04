@@ -17,9 +17,9 @@ private:
             case 'T':
                 return 2;
             case 'C':
-                return 1;
-            case 'G':
                 return 3;
+            case 'G':
+                return 1;
             default:
                 return 0;
         }
@@ -60,7 +60,25 @@ private:
     }
 
 public:
-    Solution(stringstream & f1, stringstream & f2):dna1(f1.str()),dna2(f2.str()){}
+    int f_end1;
+    int f_end2;
+    Solution(string & f1, string & f2):dna1(f1),dna2(f2){
+        while ((dna1[dna1.size()-1] != 'A') &&
+               (dna1[dna1.size()-1] != 'T') &&
+               (dna1[dna1.size()-1] != 'C') &&
+               (dna1[dna1.size()-1] != 'G')){
+                   dna1.pop_back();
+               }
+        while ((dna2[dna2.size()-1] != 'A') &&
+               (dna2[dna2.size()-1] != 'T') &&
+               (dna2[dna2.size()-1] != 'C') &&
+               (dna2[dna2.size()-1] != 'G')){
+                   dna2.pop_back();
+               }
+        f_end1 = dna1.size()-1; f_end2 = dna2.size()-1;
+        cout << dna1.size()-1 << " " << dna2.size() -1 << endl;
+        cout << dna1[dna1.size()-1] <<" " << dna2[dna2.size()-1] << endl;
+    }
 
     vector<pair<int,int> > simpleAlignment(int beg1, int end1, int beg2, int end2){
         int len1 = end1 - beg1 + 1;
@@ -125,36 +143,38 @@ public:
                 dp[i][j] = min(edit_cost,min(cut1_cost, cut2_cost));
             }
         }
-        int i=len1, j=len2;
-        string res1, res2;
-        while (i > 0 && j > 0){
-            int val = dp[i][j];
-            if (dp[i-1][j-1]+edit(dna1[beg1+i-1],dna2[beg2+j-1]) == val){
-                res1.push_back(dna1[beg1+i-1]);
-                res2.push_back(dna2[beg2+j-1]);
-                i--;j--;
-            } else if (dp[i-1][j] + loss(dna1[beg1+i-1]) == val){
-                res1.push_back('-');
-                res2.push_back(' ');
-                i--;
-            } else {
-                res1.push_back(' ');
-                res2.push_back('-');
-                j--;
-            }
-        }
-        while (i > 0){
-            res2.push_back(' ');
-            res1.push_back('-');i--;
-        }
-        while (j > 0){
-            res1.push_back(' ');
-            res2.push_back('-');j--;
-        }
-        string res1_reversed(res1.rbegin(),res1.rend());
-        string res2_reversed(res2.rbegin(),res2.rend());
-        cout << dp[len1][len2] << endl;
-        return pair<string,string>(res1_reversed,res2_reversed);
+        cout << dp[len1][len2];
+        // int i=len1, j=len2;
+        // string res1, res2;
+        // while (i > 0 && j > 0){
+        //     int val = dp[i][j];
+        //     if (dp[i-1][j-1]+edit(dna1[beg1+i-1],dna2[beg2+j-1]) == val){
+        //         res1.push_back(dna1[beg1+i-1]);
+        //         res2.push_back(dna2[beg2+j-1]);
+        //         i--;j--;
+        //     } else if (dp[i-1][j] + loss(dna1[beg1+i-1]) == val){
+        //         res1.push_back('-');
+        //         res2.push_back(' ');
+        //         i--;
+        //     } else {
+        //         res1.push_back(' ');
+        //         res2.push_back('-');
+        //         j--;
+        //     }
+        // }
+        // while (i > 0){
+        //     res2.push_back(' ');
+        //     res1.push_back('-');i--;
+        // }
+        // while (j > 0){
+        //     res1.push_back(' ');
+        //     res2.push_back('-');j--;
+        // }
+        // string res1_reversed(res1.rbegin(),res1.rend());
+        // string res2_reversed(res2.rbegin(),res2.rend());
+        // cout << dp[len1][len2] << endl;
+        // return pair<string,string>(res1_reversed,res2_reversed);
+        return pair<string,string>();
     }
 
     vector<int> spaceEfficientAlignment(int beg1, int end1, int beg2, int end2){
@@ -275,8 +295,8 @@ int main(){
     stringstream f1, f2;
     f1 << t1.rdbuf();
     f2 << t2.rdbuf();
-    Solution s(f1, f2);
-    int ibeg = 0, iend =100000-1, jbeg = 0, jend = 98913-1;
+    string dna1(f1.str()),dna2(f2.str());
+    Solution s(dna1, dna2);
     ofstream ans1("result/Ans-P3a.txt",ofstream::trunc);
     ofstream ans2("result/Ans-P3b.txt",ofstream::trunc);
     pair<string,string> efficient_result = s.solution();
@@ -286,38 +306,3 @@ int main(){
     ans2.close();
     return 0;
 }
-
-/*** Debug use
-int main(){
-    // ifstream t1("testcase/try1.txt");
-    // ifstream t2("testcase/try2.txt");
-    ifstream t1("testcase/Data-P3a.txt");
-    ifstream t2("testcase/Data-P3b.txt");
-    stringstream f1, f2;
-    f1 << t1.rdbuf();
-    f2 << t2.rdbuf();
-    Solution s(f1, f2);
-    // int ibeg = 0, iend =100000-1, jbeg = 0, jend = 98913-1;
-    int ibeg = 0, iend = 3000, jbeg = 0, jend = 2990;
-    ofstream ans1("result/Ans-P3a.txt",ofstream::trunc);
-    ofstream ans2("result/Ans-P3b.txt",ofstream::trunc);
-
-    vector<pair<int,int> > tmp_res = s.simpleAlignment(ibeg,iend,jbeg,jend);
-    pair<string,string> result = s.format_output(tmp_res,iend,jend);
-    cout << result.first << endl;
-    cout << result.second << endl;
-    pair<string,string> std_result = s.originalAlignment(ibeg,iend,jbeg,jend);
-    cout << "-------------" << endl;
-    cout << std_result.first << endl;
-    cout << std_result.second << endl;
-
-    cout << "-------------" << endl;
-    pair<string,string> efficient_result = s.solution();
-    ans1 << efficient_result.first << endl;
-    ans2 << efficient_result.second << endl;
-    ans1.close();
-    ans2.close();
-    return 0;
-}
-
-***/

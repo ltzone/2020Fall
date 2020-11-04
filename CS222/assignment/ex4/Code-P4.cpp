@@ -68,14 +68,15 @@ public:
 int main(){
     // int a[] = {8,15,3,7,14,5,7,1};
     // vector<int> test1(a, a+8);
-    vector<int> input;
+    vector<int> tmp;
     ifstream f("testcase/Data-P4.txt");
     while (! f.eof()){
     // while (input.size()<100){
         int a;
         f >> a;
-        input.push_back(a);
+        tmp.push_back(a);
     }
+    vector<int> input(tmp.begin(),--tmp.end());
     Solution s;
     vector<int> result = s.game(input);
 
