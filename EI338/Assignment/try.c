@@ -18,17 +18,18 @@ int main(int argc, char *argv[]){
     pid = fork();
 
     if (pid == 0) {
+        fork();
         pthread_attr_init(&attr);
         pthread_create(&tid,&attr,runner,NULL);
-        pthread_join(tid,NULL);
-        printf("CHILD: value = %d",value);
-    } else if (pid > 0){
-        wait(NULL);
-        printf("PARENT: value = %d",value);
+        // pthread_join(tid,NULL);
     }
+    fork();
+    sleep(5);
+    printf("Create Process\n");
 }
 
 void *runner(void *param){
-    value = 5;
+    printf("Create Thread %ld \n",pthread_self());
     pthread_exit(0);
 }
+
