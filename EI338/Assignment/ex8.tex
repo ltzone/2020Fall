@@ -1,0 +1,63 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 1   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{
+    Please explain the differences between structural hazards, data hazards, control hazards.
+    }
+  \begin{solution}
+  \par{~}
+  \begin{enumerate}
+      \item Structural hazards arise from resource conflicts when the hardware cannot support all possible combinations of instructions simultaneously in overlapped execution. For example, a register can't be read and written at the same time.
+      \item Data hazards arise when an instruction depends on the results of a previous instruction in a way that is exposed by the overlapping of instructions in the pipeline. For example, when pipelining, read after write hazards can happen, when the data is not actually written back into the register but is requested by the next read instruction.
+      \item Control hazards arise from the pipelining of branches and other instructions that change the PC. For example, when a branching instruction modifies the PC, the following instructions after the branching instruction may have been loaded into the pipeline execution, which need to be abandoned.
+  \end{enumerate}
+  \end{solution}
+  \label{ex1}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 2   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Identify all of the data dependences in the following code. Which dependences are data hazards that will be resolved via forwarding?}
+    \begin{verbatim}
+        ADD r2,r5,r4
+        ADD r4,r2,r5
+        SW r5,100(r2)
+        ADD r3,r2,r4 
+    \end{verbatim}
+  \begin{solution}
+  \par{~}
+  Data Dependency:
+  \begin{enumerate}
+      \item \texttt{ADD r2,r5,r4} and \texttt{ADD r4,r2,r5} on \texttt{r2}
+      \item \texttt{ADD r2,r5,r4} and \texttt{SW r5,100(r2)} on \texttt{r2}
+      \item \texttt{ADD r4,r2,r5} and \texttt{ADD r3,r2,r4} on \texttt{r4}
+  \end{enumerate}
+  
+
+  \end{solution}
+  \label{ex2}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 3   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{
+    \item Please write a program in OpenMP, to compute the sum of a vector. Requirements are as follows.
+    \begin{itemize}
+        \item Serial implement function of vector sum and parallel function of vector sum should be included.
+        \item Use the time of serial implement function as baseline, and test the time acceleration ratio of arrays in different length under parallel function. 
+        \item Code, result should be shown in this assignment.
+    \end{itemize}}
+  \begin{solution}
+  \par{~}
+  \end{solution}
+  \label{ex3}
+\end{exercise}
