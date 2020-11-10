@@ -110,47 +110,107 @@
     $t_v$ fraction of the goods flowing through node $v$. Given a flow network $G = (V, E)$ with maximum capacities $c(e)$ on each edge $e \in V$ and tax rates $t_v$ for each node $v \notin {s, t}$ our goal is to find the maximum amount of goods that can be transported from $s$ to $t$ under these taxation constraints. Write down your algorithm to solve this problem. You should explain why your algorithm is correct. }
   \begin{solution}
   \par{~}
-  The problem can be solved in a similar pattern like the max-flow problem. First construct a graph $G_f$ with the same vertex set and edge value as the flow value of the original flow graph. As we proceed in finding the flow, maintain the property that for every edge $e=(u,v)$ in $G$, there exists a forward edge and a backward edge in $G(f)$. $f(e)$ represents the flow that has been occupied and $f(e')$ is the backward edge with value $c(e) - f(e)$.
+  % The problem can be solved in a similar pattern like the max-flow problem. First construct a graph $G_f$ with the same vertex set and edge value as the flow value of the original flow graph. As we proceed in finding the flow, maintain the property that for every edge $e=(u,v)$ in $G$, there exists a forward edge and a backward edge in $G(f)$. $f(e)$ represents the flow that has been occupied and $f(e')$ is the backward edge with value $c(e) - f(e)$.
 
-  Then we repeat the following process, every time we will try to find a simple path in $G_f$. However, when determining the bottleneck, we should take the taxation discount into consideration, i.e. we need to make sure that for every edge in the path $\prod_{i=1}^{k}t_i b \le f(e)$, where $t_1,\ldots,t_k$ is the discount value of the predecessor nodes in the path and $b$ is the bottleneck value to be determined. With the bottleneck calculating function defined, the augment path finding algorithm can be described as follows in Algorithm \ref{Alg_Aug}.
+  % Then we repeat the following process, every time we will try to find a simple path in $G_f$. However, when determining the bottleneck, we should take the taxation discount into consideration, i.e. we need to make sure that for every edge in the path $\prod_{i=1}^{k}t_i b \le f(e)$, where $t_1,\ldots,t_k$ is the discount value of the predecessor nodes in the path and $b$ is the bottleneck value to be determined. With the bottleneck calculating function defined, the augment path finding algorithm can be described as follows in Algorithm \ref{Alg_Aug}.
 
-  \begin{algorithm}[H]
-    \KwIn{The current flow $f$, a feasible path in $G_f$ $P$}
-    \KwOut{flow $f$ after augmenting}
+  % \begin{algorithm}[H]
+  %   \KwIn{The current flow $f$, a feasible path in $G_f$ $P$}
+  %   \KwOut{flow $f$ after augmenting}
 
-    \BlankLine
-    \caption{Augmenting}\label{Alg_Aug}
+  %   \BlankLine
+  %   \caption{Augmenting}\label{Alg_Aug}
 
-    $b=$\texttt{bottleneck}$(P,f)$\;
-    \ForEach{$(u,v)\in P$}{
-      \eIf{$e=(u,v)$ is a forward edge}{
-        $f(e) = f(e) + \prod t_i b$
-      }{
-        let $e'=(v,u)$\;
-        $f(e) = f(e) - \prod t_i b$
-      }
-    }
-    \Return{f}
-  \end{algorithm}
+  %   $b=$\texttt{bottleneck}$(P,f)$\;
+  %   \ForEach{$(u,v)\in P$}{
+  %     \eIf{$e=(u,v)$ is a forward edge}{
+  %       $f(e) = f(e) + \prod t_i b$
+  %     }{
+  %       let $e'=(v,u)$\;
+  %       $f(e) = f(e) - \prod t_i b$
+  %     }
+  %   }
+  %   \Return{f}
+  % \end{algorithm}
 
-  \begin{algorithm}[H]
-    \KwOut{maximum flow $f$}
+  % \begin{algorithm}[H]
+  %   \KwOut{maximum flow $f$}
 
-    \BlankLine
-    \caption{Max Flow}\label{Alg_flow}
-    Initialize all $f(e) = 0$ for edges $e$ in $G$ \;
-    \While{ there exists a simple path $P$ in $G_f$}{
-      $f' =$\texttt{augment}$(f,P)$\;
-      update $f$ to $f'$\;
-      update $G_f$ to $G_{f'}$
-    }
-    \Return{f}
-  \end{algorithm}
-  By iterating the above augmenting algorithm until no more simple paths can be found in $G_f$ from $s$ to $t$, we can get the maximum flow in this problem.
+  %   \BlankLine
+  %   \caption{Max Flow}\label{Alg_flow}
+  %   Initialize all $f(e) = 0$ for edges $e$ in $G$ \;
+  %   \While{ there exists a simple path $P$ in $G_f$}{
+  %     $f' =$\texttt{augment}$(f,P)$\;
+  %     update $f$ to $f'$\;
+  %     update $G_f$ to $G_{f'}$
+  %   }
+  %   \Return{f}
+  % \end{algorithm}
+  % By iterating the above augmenting algorithm until no more simple paths can be found in $G_f$ from $s$ to $t$, we can get the maximum flow in this problem.
 
-  To show that our algorithm is correct, first note that after augmenting, $f'$ is still a valid flow in $G$, since our bottleneck function has been designed to satisfy the taxation constraints. Then we note that $v(f') = v(f) + \prod t_i bottleneck(P,f)$, where $t_i$s are the passing nodes on path $P$, since $t_i > 0$ for every $i$ and $bottleneck(P,f)>0$, we have that $v(f')>v(f)$.
+  % To show that our algorithm is correct, first note that after augmenting, $f'$ is still a valid flow in $G$, since our bottleneck function has been designed to satisfy the taxation constraints. Then we note that $v(f') = v(f) + \prod t_i bottleneck(P,f)$, where $t_i$s are the passing nodes on path $P$, since $t_i > 0$ for every $i$ and $bottleneck(P,f)>0$, we have that $v(f')>v(f)$.
   
-  When the algorithm terminates, it follows that no more simple path can be found in $G_f$. Since the reachability of $G_f$ indicates the possibility to increase flow, we can conclude that the maximum flow is found on termination of the algorithm.
+  % When the algorithm terminates, it follows that no more simple path can be found in $G_f$. Since the reachability of $G_f$ indicates the possibility to increase flow, we can conclude that the maximum flow is found on termination of the algorithm.
+
+
+    The problem can be formulated as a linear programming problem and be solved through simplex algorithm.
+
+    Let all the nodes excluding $s$ and $t$ be given index $i=1,\ldots,n-1$, and $s$ be given index $0$, $t$ be given index $n$. Let $c_{ij}$ denote the capacity from node $i$ to $j$ and $f_{ij}$ denote the actual flow from $i$ to $j$ used in the final solution. For every flow, we have that
+    \begin{equation}
+      0 \le f_{ij} \le c_{ij}, \forall i, j
+    \end{equation}
+    For every node, we have that
+    \begin{equation}
+      t_k  \sum_{i=0}^{n} f_{ik} = \sum_{j=0}^n f_{kj}, \forall k=1,\ldots,n-1
+    \end{equation}
+    The maximum amount of goods that can be transported can be defined as $\sum_{i=0}^{n-1} f_{in}$. i.e. the flow into $t$. We have formulated a linear programming model as follows.
+    \begin{equation}
+      \begin{aligned}
+        \max_{f_{ij}, f'_{ij}}  & \sum_{i=0}^{n-1} f_{in} \\
+        \text{s.t. } f_{ij} &\ge 0, \forall i,j = 1 \ldots n\\
+        f'_{ij} &\ge 0, \forall i,j = 1 \ldots n \\
+        f'_{ij} &= c_{ij} - f_{ij}, \forall i,j = 1 \ldots n\\
+         \sum_{j=0}^n f_{kj} -  t_k \sum_{i=0}^{n} f_{ik} &= 0, \forall k = 1 \ldots n-1
+      \end{aligned}
+      \label{eqn}
+    \end{equation}
+    The problem has already been transformed into a slack problem $P$ in Problem \ref{eqn}, with basis variables $f'_{ij}$. A trivial initial solution is to assign all $f_{ij}$ to be 0.
+    We can use the simplex algorithm to solve this problem $P$. The algorithm is described as follows. Every time we run the algorithm, the solution will be improved, until the solution converges.
+
+
+    For sake of simplicity in expression, we denote $c$ to be the coefficient vector for the objective function and $A$ to be the coefficient matrix for equality constraints.
+    
+\begin{algorithm}[H]
+  \setcounter{algocf}{1}
+  \caption{Simplex Algorithm}
+  \label{algo2}
+  
+  \AlgoDisplayBlockMarkers\AlgoDisplayGroupMarkers\SetAlgoBlockMarkers{ \{}{ \}\ }%
+  \SetAlgoNoEnd\SetAlgoNoLine
+  
+  \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+  \Input{Linear program (P) and feasible basis $B$}
+  \Output{An optimal solution for (P) or a certificate proving that (P) is unbounded }
+  Rewrite (P) so that it is in canonical form for the basis $B$\\
+  Let $\vec{x}$ be the basic feasible solution for $B$\\
+  \If{$\vec{c_N} \le \vec{0}$}{
+  {\bf stop}\\
+  ($\vec{x}$ is optimal)
+  }
+  Select $k \in N$ such that $c_k > 0$\\
+  \If{$A_k \le \vec{0}$}{
+  {\bf stop}\\
+  ((P) is unbounded)
+  }
+  Let \emph{r} be any index \emph{i} where the following minimum is attained:
+  \begin{equation}
+  t = \operatorname{min}\left\{\frac{b_i}{A_{i,k}}:A_{i,k} > 0\right\}
+  \end{equation}
+  \\
+  Let $\iota$ be the $r^{th}$ basis element\\
+  Set $B:=B\cup\{k\}$\textbackslash$\{\iota\}$\\
+  Go to step 1
+  \end{algorithm}
   \end{solution}
   \label{ex4}
 \end{exercise}
