@@ -21,18 +21,34 @@ int serial_sum(int* arr, int len){
     return sum;
 }
 
+void parallel_runner(int* arr, int len, int* result);
+
 int parallel_sum(int* arr, int len){
     int sum = 0;
-    # pragma omp parallel for num_threads(4) reduction(+:sum)
-    for (int i=0; i<len; ++i){
-        sum += arr[i];
-    }
+    // # pragma omp parallel for num_threads(4) reduction(+:sum)
+    // for (int i=0; i<len; ++i){
+    //     sum += arr[i];
+    // }
+    #pragma omp parallel num_threads(4)
+    parallel_runner(arr,len,&sum);
     return sum;
+}
+
+void parallel_runner(int* arr, int len, int* result){
+    int my_thread = omp_get_thread_num();
+    int thread_count = omp_get_num_threads();
+    int local_sum = 0;
+    for (int i=0;i*thread_count+my_thread<len;++i){
+        local_sum += arr[i*thread_count+my_thread];
+    }
+    #pragma omp critical
+    *result += local_sum;
+    return;
 }
 
 
 int main(int argc, char* argv[]){
-    int m = 10000000, l = 0, r = 5;
+    int m = 10, l = 0, r = 5;
     // generate a random array with 1000 elements ranging from 0 to 4;
     int* arr = generate_array(m,l,r);
 

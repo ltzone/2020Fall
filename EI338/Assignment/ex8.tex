@@ -59,14 +59,14 @@
   \begin{solution}
   \par{~}
 
-  The implementation C++ code is shown below. A running example can be found in Figure \ref{fig:ex3}
+  The implementation C++ code is shown below. The sum of an array is split into four threads, each summing the index with a step size of thread counts. A running example can be found in Figure \ref{fig:ex3}
 
   \begin{table}[p]
     \begin{center}
       \begin{tabular}{llllllll}
       \hline
       \multicolumn{1}{c}{\textbf{Array Size}} & \multicolumn{1}{c}{10} & \multicolumn{1}{c}{100} & \multicolumn{1}{c}{1000} & \multicolumn{1}{c}{\textbf{$10^4$}} & \multicolumn{1}{c}{\textbf{$10^5$}} & \multicolumn{1}{c}{\textbf{$10^6$}} & \multicolumn{1}{c}{\textbf{$10^7$}} \\ \hline
-SpeedUp Ratio                           & 0.00086                         & 0.00359                          & 0.02345                           & 0.13191                             & 1.19131                             & 1.75058                             & 3.99408                             \\ \hline
+SpeedUp Ratio                           & 0.00068                         & 0.00255                         & 0.00905                           & 0.04678                             & 0.902415                            & 2.78739                            & 3.33468                             \\ \hline
 
       \end{tabular}
     \end{center}
@@ -95,6 +95,7 @@ SpeedUp Ratio                           & 0.00086                         & 0.00
 
   using namespace std; 
 
+
   int* generate_array(int len, int randl, int randr){
       int* gen = new int [len];
       for (int i=0; i<len; ++i){
@@ -111,18 +112,31 @@ SpeedUp Ratio                           & 0.00086                         & 0.00
       return sum;
   }
 
+  void parallel_runner(int* arr, int len, int* result);
+
   int parallel_sum(int* arr, int len){
       int sum = 0;
-      # pragma omp parallel for num_threads(4) reduction(+:sum)
-      for (int i=0; i<len; ++i){
-          sum += arr[i];
-      }
+      #pragma omp parallel num_threads(4)
+      parallel_runner(arr,len,&sum);
       return sum;
   }
 
+  void parallel_runner(int* arr, int len, int* result){
+      int my_thread = omp_get_thread_num();
+      int thread_count = omp_get_num_threads();
+      int local_sum = 0;
+      for (int i=0;i*thread_count+my_thread<len;++i){
+          local_sum += arr[i*thread_count+my_thread];
+      }
+      #pragma omp critical
+      *result += local_sum;
+      return;
+  }
+
+
   int main(int argc, char* argv[]){
-      int m = 1000000, l = 0, r = 5;
-      // generate a random array with 1000 elements ranging from 0 to 4;
+      int m = 10000000, l = 0, r = 5;
+      // generate a random array with m elements ranging from l to r;
       int* arr = generate_array(m,l,r);
 
       double t1,t2,t3;
@@ -133,7 +147,8 @@ SpeedUp Ratio                           & 0.00086                         & 0.00
       t3 = omp_get_wtime();
       cout << "Serial Time: " << t2 - t1 << "\tResult: " << sum_res1 << endl;
       cout << "Parallel Time: " << t3 - t2 << "\tResult: " << sum_res2 << endl;
+      cout << (t2 - t1) /(t3 - t2) << endl;
       delete [] arr;
-      return 0;
-  }
+    return 0;
+}
 \end{verbatim}
