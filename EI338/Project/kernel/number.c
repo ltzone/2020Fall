@@ -1,5 +1,5 @@
 /**
- * simple.c
+ * number.c
  *
  * A simple kernel module. 
  * 
@@ -7,6 +7,8 @@
  *
  * Operating System Concepts - 10th Edition
  * Copyright John Wiley & Sons - 2018
+ * 
+ * Edited by Litao Zhou
  */
 
 #include <linux/init.h>
@@ -35,6 +37,6 @@ module_init( simple_init );
 module_exit( simple_exit );
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("Simple Module");
-MODULE_AUTHOR("SGG");
+MODULE_DESCRIPTION("Number Module");
+MODULE_AUTHOR("SGG LTZ");
 

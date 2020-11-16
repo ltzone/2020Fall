@@ -1,5 +1,5 @@
 /**
- * hello.c
+ * seconds.c
  *
  * Kernel module that communicates with /proc file system.
  * 
@@ -8,6 +8,8 @@
  *
  * Operating System Concepts - 10th Edition
  * Copyright John Wiley & Sons - 2018
+ * 
+ * Edited by Litao Zhou - 2020
  */
 
 #include <linux/init.h>
@@ -21,7 +23,6 @@
 #define BUFFER_SIZE 128
 
 #define PROC_NAME "seconds"
-#define MESSAGE "Hello World\n"
 
 /**
  * Function prototypes
@@ -40,10 +41,10 @@ static u64 load_jif;
 static int proc_init(void)
 {
 
-        // creates the /proc/hello entry
+        // creates the /proc/seconds entry
         // the following function call is a wrapper for
         // proc_create_data() passing NULL as the last argument
-        load_jif = get_jiffies_64();
+        load_jif = get_jiffies_64(); // <--- This is new
         
         proc_create(PROC_NAME, 0, NULL, &proc_ops);
 
@@ -106,5 +107,5 @@ module_init( proc_init );
 module_exit( proc_exit );
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("JIFFIES Module");
-MODULE_AUTHOR("SGG");
+MODULE_DESCRIPTION("SECONDS Module");
+MODULE_AUTHOR("SGG LTZ");
