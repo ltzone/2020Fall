@@ -70,13 +70,6 @@ int main(void)
 			}
 		} /* end of input processing */
 
-		// printf("%d\n",arg_cnt);
-		// for (int i=0;args[i]!=NULL;++i){
-		// 	printf("%s\n",args[i]);
-		// 		// free(args[i]);
-		// }
-		
-
 
 		if (arg_cnt == 1 && args[0][0] =='!' && args[0][1] == '!'){
 			if (last_arg_cnt == 0){

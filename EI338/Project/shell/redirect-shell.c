@@ -4,7 +4,9 @@
  * Operating System Concepts - Tenth Edition
  * Copyright John Wiley & Sons - 2018
  */
-
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -70,12 +72,9 @@ int main(void)
 			}
 		} /* end of input processing */
 
-		// printf("%d\n",arg_cnt);
-		// for (int i=0;args[i]!=NULL;++i){
-		// 	printf("%s\n",args[i]);
-		// 		// free(args[i]);
-		// }
-		
+		if (arg_cnt == 0){
+			continue;
+		}
 
 
 		if (arg_cnt == 1 && args[0][0] =='!' && args[0][1] == '!'){
@@ -114,13 +113,49 @@ int main(void)
 			args[--arg_cnt] = NULL;
 		}
 
+		int redirect_output = 0;
+		char* output_dir = NULL;
+		if (arg_cnt > 2 && args[arg_cnt-2][0] == '>'){
+			redirect_output = 1;
+			output_dir = args[arg_cnt-1];
+			free(args[arg_cnt-2]);
+			arg_cnt -= 2;
+			args[arg_cnt] = NULL;
+		}
+
+		int redirect_input = 0;
+		char* input_dir = NULL;
+		if (arg_cnt > 2 && args[arg_cnt-2][0] == '<'){
+			redirect_input = 1;
+			input_dir = args[arg_cnt-1];
+			free(args[arg_cnt-2]);
+			arg_cnt -= 2;
+			args[arg_cnt] = NULL;
+		}
+
+		if (redirect_input && redirect_output){
+			printf("Input and Output can't be simultaneously redirected\n");
+			continue;
+		}
+
+
+
+
 		pid_t pid = fork();
 
 		if (pid == -1) {
 			perror("fork failed");
 			exit(EXIT_FAILURE);
 		}
-		else if (pid == 0) {			
+		else if (pid == 0) {
+			if (redirect_input){
+				int input_f = open(input_dir,O_RDONLY);
+				dup2(input_f,STDIN_FILENO);
+			}
+			if (redirect_output){
+				int output_f = open(output_dir,O_WRONLY);
+				dup2(output_f,STDOUT_FILENO);
+			}
 			execvp(args[0],args);
 			_exit(EXIT_SUCCESS);
 		}
