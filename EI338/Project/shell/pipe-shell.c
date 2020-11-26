@@ -90,13 +90,16 @@ int main(void)
 				printf("Error: last command does not exist\n");
 				continue;
 			}
+			printf("History Mode Executing: ");
 			/** history mode, copy history storage to current args */
 			for (int i=0;i<last_arg_cnt;++i){
 				if (i>=1){
 					args[i] =(char*) malloc(MAX_LINE*sizeof(char));
 				}
 				strcpy(args[i],last_args[i]);
+				printf("%s ",args[i]);
 			}
+			printf("\n");
 			arg_cnt = last_arg_cnt;
 			args[arg_cnt] = NULL;
 		} else {

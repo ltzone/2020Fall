@@ -76,19 +76,27 @@ int main(void)
 			continue;
 		}
 
+		if (arg_cnt == 1 && strcmp(args[0],"exit") == 0){
+			should_run = 0;
+			break;
+		}
+
 
 		if (arg_cnt == 1 && args[0][0] =='!' && args[0][1] == '!'){
 			if (last_arg_cnt == 0){
 				printf("Error: last command does not exist\n");
 				continue;
 			}
+			printf("History Mode Executing: ");
 			/** history mode, copy history storage to current args */
 			for (int i=0;i<last_arg_cnt;++i){
 				if (i>=1){
 					args[i] =(char*) malloc(MAX_LINE*sizeof(char));
 				}
 				strcpy(args[i],last_args[i]);
+				printf("%s ",args[i]);
 			}
+			printf("\n");
 			arg_cnt = last_arg_cnt;
 			args[arg_cnt] = NULL;
 		} else {
