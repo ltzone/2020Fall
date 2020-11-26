@@ -39,6 +39,7 @@ cover and has lower cardinality, replace $S$ with $S^{\prime}$.
 
 > Local optimal may or may not differ a lot to true optimal
 
+
 ### Local Search
 
 **Local search**.  Algorithm that explores the space of possible solutions in sequential fashion, moving from a current solution to a "nearby" one.
@@ -50,8 +51,9 @@ cover and has lower cardinality, replace $S$ with $S^{\prime}$.
 
 ## Metropolis algorithm
 
-- Simulate behavior of a physical system according to principles of statistical mechanics.
-- Globally biased toward "downhill" steps, but occasionallymakes "uphill" steps to break out of local minima.
+- Simulate behavior of a physical system according to principles of statistical mechanics
+- Globally biased toward "downhill" steps, but occasionally makes "uphill" steps to break out of local minima
+
 
 **Gibbs-Boltzmann function.** The probability of finding a physical system in a
 state with energy $E$ is proportional to $e^{-E /(k T)},$ where $\mathrm{T}>0$ is temperature and $k$ is a constant.
@@ -59,6 +61,7 @@ state with energy $E$ is proportional to $e^{-E /(k T)},$ where $\mathrm{T}>0$ i
 - System more likely to be in a lower energy state than higher one.
   - $T$ large: high and low energy states have roughly same probability
   - $T$ small: low energy states are much more probable
+
 
 **Metropolis algorithm**.
 - Given a fixed temperature $T,$ maintain current state $S$.
@@ -69,6 +72,7 @@ state with energy $E$ is proportional to $e^{-E /(k T)},$ where $\mathrm{T}>0$ i
 > Worse solution will have a probability of $e^{-\Delta E /(k T)}$ to be selected
 
 **Theorem**. Let $f_{S}(t)$ be fraction of first $t$ steps in which simulation is in state $S .$ Then, assuming some technical conditions, with probability 1 :
+
 $$
 \begin{array}{l}
 \lim _{t \rightarrow \infty} f_{S}(t)=\frac{1}{Z} e^{-E(S) /(k T)} \\
