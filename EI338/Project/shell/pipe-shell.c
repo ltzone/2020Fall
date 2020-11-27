@@ -208,12 +208,12 @@ int main(void)
 				_exit(EXIT_SUCCESS);
 			}
 		}
-		else {
+		else { /* parent process */
 			int status;
 			if (should_wait){
 				(void)waitpid(pid, &status, 0);
 			}
-			if (pipe_loc){
+			if (pipe_loc){ /* re-fill the '|' in args */
 				args[pipe_loc] = malloc(1);
 			}
 			for (int i=0;args[i]!=NULL;++i){

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_LINE		80 /* 80 chars per line, per command */
 

@@ -75,6 +75,10 @@ static ssize_t proc_read(struct file *file, char __user *usr_buf, size_t count, 
 
         completed = 1;
 
+        if (tsk == NULL){
+                return 0;
+        }
+
         rv = sprintf(buffer, "command = [%s] pid = [%ld] state = [%ld]\n", tsk->comm, l_pid, tsk->state);
 
         // copies the contents of kernel buffer to userspace usr_buf 
