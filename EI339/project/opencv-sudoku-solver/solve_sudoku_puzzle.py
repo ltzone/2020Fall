@@ -11,15 +11,18 @@ import numpy as np
 import argparse
 import imutils
 import cv2
+import os
+
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-m", "--model", required=True,
-	help="path to trained digit classifier")
+                help="path to trained digit classifier")
 ap.add_argument("-i", "--image", required=True,
-	help="path to input sudoku puzzle image")
+                help="path to input sudoku puzzle image")
 ap.add_argument("-d", "--debug", type=int, default=-1,
-	help="whether or not we are visualizing each step of the pipeline")
+                help="whether or not we are visualizing each step of the pipeline")
 args = vars(ap.parse_args())
 
 # load the digit classifier from disk
@@ -49,44 +52,44 @@ cellLocs = []
 
 # loop over the grid locations
 for y in range(0, 9):
-	# initialize the current list of cell locations
-	row = []
+    # initialize the current list of cell locations
+    row = []
 
-	for x in range(0, 9):
-		# compute the starting and ending (x, y)-coordinates of the
-		# current cell
-		startX = x * stepX
-		startY = y * stepY
-		endX = (x + 1) * stepX
-		endY = (y + 1) * stepY
+    for x in range(0, 9):
+        # compute the starting and ending (x, y)-coordinates of the
+        # current cell
+        startX = x * stepX
+        startY = y * stepY
+        endX = (x + 1) * stepX
+        endY = (y + 1) * stepY
 
-		# add the (x, y)-coordinates to our cell locations list
-		row.append((startX, startY, endX, endY))
+        # add the (x, y)-coordinates to our cell locations list
+        row.append((startX, startY, endX, endY))
 
-		# crop the cell from the warped transform image and then
-		# extract the digit from the cell
-		cell = warped[startY:endY, startX:endX]
-		digit = extract_digit(cell, debug=args["debug"] > 0)
+        # crop the cell from the warped transform image and then
+        # extract the digit from the cell
+        cell = warped[startY:endY, startX:endX]
+        digit = extract_digit(cell, debug=args["debug"] > 0)
 
-		# verify that the digit is not empty
-		if digit is not None:
-			foo = np.hstack([cell, digit])
-			cv2.imshow("Cell/Digit", foo)
+        # verify that the digit is not empty
+        if digit is not None:
+            foo = np.hstack([cell, digit])
+            cv2.imshow("Cell/Digit", foo)
 
-			# resize the cell to 28x28 pixels and then prepare the
-			# cell for classification
-			roi = cv2.resize(digit, (28, 28))
-			roi = roi.astype("float") / 255.0
-			roi = img_to_array(roi)
-			roi = np.expand_dims(roi, axis=0)
+            # resize the cell to 28x28 pixels and then prepare the
+            # cell for classification
+            roi = cv2.resize(digit, (28, 28))
+            roi = roi.astype("float") / 255.0
+            roi = img_to_array(roi)
+            roi = np.expand_dims(roi, axis=0)
 
-			# classify the digit and update the sudoku board with the
-			# prediction
-			pred = model.predict(roi).argmax(axis=1)[0]
-			board[y, x] = pred
+            # classify the digit and update the sudoku board with the
+            # prediction
+            pred = model.predict(roi).argmax(axis=1)[0]
+            board[y, x] = pred
 
-	# add the row to our cell locations
-	cellLocs.append(row)
+    # add the row to our cell locations
+    cellLocs.append(row)
 
 # construct a sudoku puzzle from the board
 print("[INFO] OCR'd sudoku board:")
@@ -100,21 +103,21 @@ solution.show_full()
 
 # loop over the cell locations and board
 for (cellRow, boardRow) in zip(cellLocs, solution.board):
-	# loop over individual cell in the row
-	for (box, digit) in zip(cellRow, boardRow):
-		# unpack the cell coordinates
-		startX, startY, endX, endY = box
+    # loop over individual cell in the row
+    for (box, digit) in zip(cellRow, boardRow):
+        # unpack the cell coordinates
+        startX, startY, endX, endY = box
 
-		# compute the coordinates of where the digit will be drawn
-		# on the output puzzle image
-		textX = int((endX - startX) * 0.33)
-		textY = int((endY - startY) * -0.2)
-		textX += startX
-		textY += endY
+        # compute the coordinates of where the digit will be drawn
+        # on the output puzzle image
+        textX = int((endX - startX) * 0.33)
+        textY = int((endY - startY) * -0.2)
+        textX += startX
+        textY += endY
 
-		# draw the result digit on the sudoku puzzle image
-		cv2.putText(puzzleImage, str(digit), (textX, textY),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
+        # draw the result digit on the sudoku puzzle image
+        cv2.putText(puzzleImage, str(digit), (textX, textY),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
 
 # show the output image
 cv2.imshow("Sudoku Result", puzzleImage)
