@@ -237,3 +237,24 @@ $$
 
 - Many things cancel out – only CPTs with S remain!
 - More generally: only CPTs that have resampled variable need to be considered, and joined together
+
+
+### Example: Bivariate Normal Distribution
+> 对连续性变量，求条件概率更复杂，example：
+
+![](img/12-01-14-10-08.png)
+
+## Summary
+
+- Prior Sampling
+  - 根据P（Q）直接采样
+- Rejection Sampling
+  - P(Q|e)
+  - 丢弃样本的概率（1-P(e)）
+- Likelihood Weighting
+  - P(Q|e)
+  - 加权，提高效率
+  - 证据在网络下层时，效率不高
+- Gibbs Sampling
+  - P(Q|e)，把n-1个变量实例化
+  - Foundation: 任意组合都看作一个状态，只关心一个单一变量
