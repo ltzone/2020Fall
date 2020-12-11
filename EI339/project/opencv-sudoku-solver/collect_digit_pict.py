@@ -5,15 +5,15 @@ import cv2
 
 from pyimagesearch.sudoku import puzzle
 
-OUTPUT_DIR = "dataset/my/"
+OUTPUT_DIR = "dataset3"
 
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--image", required=True,
                     help="path to read input image")
-    ap.add_argument("-l", "--label", required=True,
-                    help="label of the input image 0~9")
+    # ap.add_argument("-l", "--label", required=True,
+    #                 help="label of the input image 0~9")
     ap.add_argument("-d", "--debug", type=int, default=-1,
                     help="whether or not we are visualizing each step of the pipeline")
     args = vars(ap.parse_args())
@@ -43,14 +43,14 @@ if __name__ == '__main__':
             # crop the cell from the warped transform image and then
             # extract the digit from the cell
             cell = warped[startY:endY, startX:endX]
-            digit = puzzle.extract_digit(cell, debug=args["debug"] > 0)
+            digit = puzzle.extract_dataset(cell, debug=args["debug"] > 0)
 
             # verify that the digit is not empty
             if digit is not None:
                 # resize the cell to 28x28 pixels and then prepare the
                 # cell for classification
                 roi = cv2.resize(digit, (28, 28))
-                out_path = OUTPUT_DIR+args["label"]+"/"+str(total_cnt)+".png"
+                out_path = OUTPUT_DIR+"/"+str(y)+"-518030910407-"+str(x)+".jpg"
                 cv2.imwrite(out_path, roi)
                 # roi = roi.astype("float") / 255.0
                 # roi = img_to_array(roi)
