@@ -1,0 +1,101 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 1   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{
+    Given six memory partitions of 300 KB, 600 KB, 350 KB, 200 KB, 750 KB,
+    and 125 KB (in order), how would the first-fit, best-fit, and worst-fit
+    algorithms place processes of size 115 KB, 500 KB, 358 KB, 200 KB, and
+    375 KB (in order)?}
+  \begin{solution}
+    See Table \ref{1}, for every entry, the first number indicates the remaining space of partition and the second number indicates the original size of partition.
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{llllll}
+            \hline
+            & 115 KB     & 500 KB     & 358 KB     & 200 KB     & 375 KB    \\ \hline
+  First-fit & 185/300 KB & 100/600 KB & 392/750 KB & 150/350 KB & 17/750 KB \\
+  Best-fit  & 10/115KB   & 100/600 KB & 392/750 KB & 0/200 KB   & 17/750 KB \\
+  Worst-fit & 635/750 KB & 135/750 KB & 242/600 KB & 150/350 KB & FAIL      \\ \hline
+        \end{tabular}
+        \caption{Exercise 1\label{1}}
+        \end{table}
+  \end{solution}
+  \label{ex1}
+\end{exercise}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 2   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Assuming a 1-KB page size, what are the page numbers and offsets for
+    the following address references (provided as decimal numbers):
+    \begin{enumerate}
+        \item [a.] 3085
+        \item [b.] 42095
+        \item [c.] 215201
+        \item [d.] 650000
+        \item [e.] 2000001
+    \end{enumerate}}
+  \begin{solution} Assume that the addresses are given in terms of bytes. The results are given in decimal number.
+    \begin{enumerate}
+    \item [a.] Page number: 3, Offset: 13
+    \item [b.] Page number: 41, Offset: 	111
+    \item [c.] Page number: 210, Offset: 	161
+    \item [d.] Page number: 634, Offset: 	784
+    \item [e.] Page number: 1953, Offset: 	129
+    \end{enumerate}
+  \end{solution}
+  \label{ex2}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 3   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Consider a logical address space of 256 pages with a 4-KB page size,
+    mapped onto a physical memory of 64 frames.
+    \begin{enumerate}
+        \item [a.] How many bits are required in the logical address?
+        \item [b.] How many bits are required in the physical address?
+    \end{enumerate}}
+  \begin{solution}
+  \par{~}
+  \begin{enumerate}
+      \item Logical address requires $\log 256 + \log (4\cdot 1024) = 20$ bits.
+      \item Physical address requires $\log 64 + \log (4\cdot 1024) = 18$ bits.
+  \end{enumerate}
+  \end{solution}
+  \label{ex3}
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%    EXERCISE 4   %%%%%%%%%%%%
+%%%%%%%%%%%%%                 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{exercise}[]{Consider a computer system with a 32-bit logical address and 4-KB page
+    size. The system supports up to 512 MB of physical memory. How many
+    entries are there in each of the following?
+    \begin{enumerate}
+        \item [a.] A conventional, single-level page table
+        \item [b.] An inverted page table
+    \end{enumerate}}
+  \begin{solution}
+  \par{~}
+  Number of pages is $2^{32 - \log(4\cdot 1024)} = 2^{20}$, and the number of frames is $512 MB / 4 KB = 2^{17}$.
+  \begin{enumerate}
+      \item Number of entries are equal to number of pages $2^{20}$
+      \item Number of entries are equal to number of frames $2^{17}$.
+  \end{enumerate}
+  
+  \end{solution}
+  \label{ex4}
+\end{exercise}
