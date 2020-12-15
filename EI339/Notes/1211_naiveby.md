@@ -378,7 +378,7 @@ Laplace for conditionals:
 置信度
 
 - The confidence of a probabilistic classifier: 
-  - Posterior probability of the top label
+  - Posterior probability of the top label (最大后验概率)
   - Represents how sure the classifier is of the classification 
   - Any probabilistic model will have confidences
   - No guarantee confidence is correct
@@ -387,3 +387,6 @@ Laplace for conditionals:
   - Weak calibration: higher confidences mean higher accuracy
   - Strong calibration: confidence predicts accuracy rate 
   - What’s the value of calibration?
+
+![](img/12-15-14-08-19.png)
+
