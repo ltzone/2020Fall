@@ -37,6 +37,7 @@ int main(int argc, char **argv){
         available[i] = atoi(argv[i+1]);
     }
 
+    /* load max table from MAX_REQUEST_DIR */
     FILE *fp = fopen(MAX_REQUEST_DIR, "r");
     if (!fp){
         printf("Fail to open file '%s'\n",MAX_REQUEST_DIR);
@@ -51,14 +52,15 @@ int main(int argc, char **argv){
         }
         fscanf(fp, "\n");
     }
-
+    fclose(fp);
+    
     // for (int i=0;i<NUMBER_OF_CUSTOMERS;++i){
     //     for (int j=0;j<NUMBER_OF_RESOURCES;++j){
     //         printf("%d,", maximum[i][j]);
     //     }
     //     printf("\n");
     // }
-    fclose(fp);
+    
     for (int i=0;i<NUMBER_OF_CUSTOMERS;++i){
         for (int j=0;j<NUMBER_OF_RESOURCES;++j){
             allocation[i][j] = 0;
@@ -117,6 +119,7 @@ int main(int argc, char **argv){
 
 int request_resources(int customer_num, int request[]){
     /** return 0 if successful and 1 if unsuccessful */
+    /* check request <= available, request <= max */
     for (int i=0;i<NUMBER_OF_RESOURCES;++i){
         if (allocation[customer_num][i] + request[i] > maximum[customer_num][i]){
             return 1;
@@ -124,6 +127,9 @@ int request_resources(int customer_num, int request[]){
         if (request[i] > available[i]){
             return 1;
         }
+    }
+    /* virtual allocation */
+    for (int i=0;i<NUMBER_OF_RESOURCES;++i){
         available[i] -= request[i];
         allocation[customer_num][i] += request[i];
         need[customer_num][i] -= request[i];
@@ -131,6 +137,7 @@ int request_resources(int customer_num, int request[]){
     if (safety_check() == 1){
         return 0;
     } else {
+        /* if fails, restore the allocation */
         for (int i=0;i<NUMBER_OF_RESOURCES;++i){
             available[i] += request[i];
             allocation[customer_num][i] -= request[i];
@@ -152,8 +159,8 @@ void release_resources(int customer_num, int release[]){
 }
 
 int safety_check(){
-  /**  return 1 if safe and 0 if unsafe
-**/
+    /**  return 1 if safe and 0 if unsafe */
+    /* initialize work and finish array */
     int work[NUMBER_OF_RESOURCES];
     int finish[NUMBER_OF_CUSTOMERS];
     for (int i=0;i<NUMBER_OF_RESOURCES;++i){
@@ -162,6 +169,7 @@ int safety_check(){
     for (int i=0;i<NUMBER_OF_CUSTOMERS;++i){
         finish[i] = 0;
     }
+    /* use finish_cnt to count the number of customers with finish[i] = 1 */
     int finish_cnt = 0;
     while (finish_cnt < NUMBER_OF_CUSTOMERS){
         int chosen_proc = -1;
@@ -181,8 +189,10 @@ int safety_check(){
             }
         }
         if (chosen_proc == -1){
+            /* fail to find a customer to release its resources */
             return 0;
         }
+        /* successfully find a customer, and release its resources */
         finish_cnt += 1;
         finish[chosen_proc] = 1;
         for (int i=0;i<NUMBER_OF_RESOURCES;++i){
