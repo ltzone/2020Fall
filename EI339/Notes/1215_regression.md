@@ -132,7 +132,7 @@ $$
   > The larger the size of the reference vector, the greater the probability it will fall into the class (the larger 张角)
 
 ![](img/12-15-15-09-49.png)
-> for any given vector, $|P||\omega_1|\cos\theta_1 \eq |P||\omega_2|\cos\theta_2$ can solve the size of the angle
+> for any given vector, $|P||\omega_1|\cos\theta_1 = |P||\omega_2|\cos\theta_2$ can solve the size of the angle
 
 ### Learning: Multiclass Perceptron
 
