@@ -291,6 +291,7 @@ How to satisfy a request of size n from a list of free holes?
 - Suppose that 10 nanoseconds to access memory.
   - If we find the desired page in TLB then a mapped-memory access take 10 ns
   - Otherwise we need two memory access so it is 20 ns
+> Failure to find the address in TLB means a double access of memory
 - **Effective Access Time (EAT)**
     $$
     \mathrm{EAT}=0.80 \times 10+0.20 \times 20=12 \text { nanoseconds }
@@ -302,19 +303,273 @@ How to satisfy a request of size n from a list of free holes?
     $$
   implying only $1 \%$ slowdown in access time.
 
+> Since the locality of program instructions are fairly good, the hit ratio can be very high w.r.t. EAT of TLB
+
+### Memory Protection
+> Another usage of TLB is Memory Protection
+- Memory protection implemented by associating protection bit with each frame to indicate if read-only or read-write access is allowed
+  - Can also add more bits to indicate page executy-only,and so on
+- **Valid-invalid** bit attached to each entry in the page table:
+  - “valid” indicates that the associated page is in the process’ logical address space, and is thus a legal page
+  - “invalid” indicates that the page is not in the process’ logical address space
+  - Or use **page-table length register (PLTR)**
+  > So that the kernel can notice such invalid requests
+- Any violations result in a trap to the kernel
+
+![](img/12-18-13-11-02.png)
+
+> The valid space that should be alotted to every process will be discussed in the next chapter
+
+### Shared Pages
+> The shared resources in OS can also be extended to the page level
+
+
+- **Shared code**
+  - One copy of read-only (**reentrant**) code shared among processes (i.e., text editors, compilers, window systems)
+  > Resources that won't need sync
+  - Similar to multiple threads sharing the same process space
+  - Also useful for interprocess communication if sharing of read-write pages is allowed
+- **Private code and data**
+  - Each process keeps a separate copy of the code and data
+  - The pages for the private code and data can appear anywhere in the logical address space
+
+> The features above can be implemented in the page table through a signal bit.
+> ![](img/12-18-13-12-51.png)
+
+
 ## Structure of the Page Table
 
+- Memory structures for paging can _get huge using straight-forward methods_
+- Consider a 32-bit logical address space as on modern computers
+- Page size of 4KB ($2^12$)
+- Page table would have 1 million entries ($2^32 / 2^12$)
+- If each entry is 4 bytes $\Rightarrow$ each process **4 MB** of physical address space for the page table alone
+  - Don’t want to allocate that contiguously in main memory
+- One simple solution is to divide the page table into smaller units
+  - Hierarchical Paging 
+  - Hashed Page Tables 
+  - Inverted Page Tables
 
+### Hierarchical Page Tables
+
+- Break up the logical address space into multiple page tables
+- A simple technique is a two-level page table
+- We then page the page table
+
+![](img/12-18-13-16-44.png)
+
+> Shrink M-level to K-level page tables
+
+#### Two-Level Paging Example
+
+- A logical address (on 32-bit machine with 1K page size) is divided into: 
+- a page number of 20 bits
+- a page offset of 12 bits
+- Since the page table is paged, the page number is further divided into: 
+- a 10-bit page number
+- a 10-bit page offset
+- Thus, a logical address is as follows:
+  ![](img/12-18-13-18-18.png)
+- where p1 is an index into the outer page table, and p2 is the displacement within the page of the inner page table
+- Known as **forward-mapped page** table
+
+> Pros: Shrinking size
+> Cons: Extra access time
+> ![](img/12-18-13-18-57.png)
+> Time trade-off space
+
+
+#### 64-bit Logical Address Space
+> Even two-level paging scheme not sufficient
+- If page size is 4 KB (212)
+  - Then page table has $2^{52}$ entries
+  - If two level scheme, inner page tables could be $2^{10}$ 4-byte entries
+  - Address would look like
+    ![](img/12-18-13-21-19.png)
+  - Outer page table has $2^{42}$ entries or $2^{42}$ bytes
+  - One solution is to add a 2nd outer page table
+  - But in the following example the 2nd outer page table is still $2^{34}$ bytes in size
+    - And possibly 4 memory access to get to one physical memory location
+- Three-level Paging Scheme
+  - ![](img/12-18-13-22-10.png)
+  - ![](img/12-18-13-22-16.png)
+
+### Hashed Page Tables
+> Most programs will not use such a large memory space. The page table is very sparse
+> ----> Hashed page tables
+
+- Common in address spaces > 32 bits
+- The virtual page number is hashed into a page table
+  - This page table contains a chain of elements hashing to the same location
+- Each element contains (1) the virtual page number (2) the value of the mapped page frame (3) a pointer to the next element
+- Virtual page numbers are compared in this chain searching for a match
+  - If a match is found, the corresponding physical frame is extracted
+- Variation for 64-bit addresses is clustered page tables
+  - Similar to hashed but each entry refers to several pages (such as 16) rather than 1
+  - Especially useful for **sparse** address spaces (where memory references are non-contiguous and scattered)
+
+![](img/12-18-13-24-01.png)
+
+
+
+### Inverted Page Table
+> Since page cnts >> frame cnts, since the frame cnts are determined, we can create an inverted page table
+- Rather than each process having a page table and keeping track of all possible logical pages, track all physical pages
+- One entry for each real page of memory
+- Entry consists of _the virtual address of the page stored in that real memory location_, with _information about the process that owns that page_
+> How to search?
+- Decreases memory needed to store each page table, but increases time needed to **search** the table when a page reference occurs
+- Use hashtable to limit the search to one — or at most a few— page-table entries
+  - TLB can accelerate access
+- But how to implement shared memory?
+  - One mapping of virtual address to the shared physical address
+ 
+![](img/12-18-13-27-29.png)
+> HW support: e.g. Content Addressable Memory
+> originates in router/...
+> Traditional Memory: input index, activate the memory unit according to its index(row num/col num), read its content
+> CAM: input content, activate the unit that match the content (together with its affilitaed information), output.
+> Modern Processors typically have implemented  Content Addressable Memory into TLB to support searching in inverted page table
+> CAM is getting growing importance **(useful for search and match problems!)**
 
 
 ## Swapping
+> When memory is not enough?
+- A process can be **swapped** temporarily out of memory to a backing store, and then brought back into memory for continued execution
+  - Total physical memory space of processes can exceed physical memory
+> Sometimes corresponding to the context switch in processor
+> Because both the memory space & the processes on CPU are limited in HW, but available in SW(OS) notions.
+- **Backing store** – fast disk large enough to accommodate copies of all memory images for all users; must provide direct access to these memory images
+- **Roll out, roll in** – swapping variant used for priority-based scheduling algorithms; lower-priority process is swapped out so higher-priority process can be loaded and executed
+- Major part of swap time is transfer time; total transfer time is directly proportional to the amount of memory swapped
+- System maintains a **ready queue** of ready-to-run processes which have memory images on disk
 
 
+- Does the swapped out process need to swap back _in to same physical_ addresses?
+  - **Depends** on address binding method
+    - E.g. shared(yes) or individual(not necessarily)
+    - Plus consider pending I/O to / from process memory space
+- Modified versions of swapping are found on many systems (i.e., UNIX, Linux, and Windows)
+  - Swapping **normally disabled**
+  - Started if more than threshold amount of memory allocated
+  - Disabled again once memory demand reduced below threshold
+![](img/12-18-13-37-39.png)
 
+### Context Switch Time including Swapping
+> In early stages, swapping always come with context switch (for those switched away will always be more likely to be swapped out)
+> However, finer grain is better
+
+- If next processes to be put on CPU is not in memory, need to swap out a process and swap in target process
+> Recall, in previous lectures we didn't consider the cost of swapping
+- Context switch time can then be very high
+- 100MB process swapping to hard disk with transfer rate of 50MB/sec
+  - Swap out time of 2000 ms
+  - Plus swap in of same sized process
+  - Total context switch swapping component time of 4000ms (4 seconds)
+- Can reduce if reduce size of memory swapped – by knowing how much memory really being used
+  - System calls to inform OS of memory use via `request_memory()` and `release_memory()`
+ 
+
+> Context Switch Time mainly caused by Swapping
+
+- **Other constraints** as well on swapping
+  - Pending I/O – can’t swap out as I/O would occur to wrong process
+  > external interrupt waiting for IO to return, may be written into an invalid address swapped out
+  > One solution, put returned data into kernel space (which will never be swapped out) (double buffering) (extra overhead)
+  - Or always transfer I/O to kernel space, then to I/O device
+    - Known as double buffering, adds overhead
+- *Standard swapping not used in modern operating systems*
+  - But modified version common
+    - Swap only when free memory extremely low
+    - or finer-grained swapping
+
+### Swapping on Mobile Systems
+> Interaction is more important (than steadiness/performance, no disk)
+> Endurance issue: frequent swipe/write will reduce endurance
+> How to deal with full memory? (/wo swapping)
+- Not typically supported 
+  - Flash memory based (non-volatile)
+    - Small amount of space
+    - Limited number of write cycles
+    - Poor throughput between flash memory and CPU on mobile platform
+- Instead use other methods to free memory if low
+  - iOS ***asks*** apps to voluntarily relinquish allocated memory
+    - Read-only data thrown out and reloaded from flash if needed
+    - Failure to free can result in termination
+  - Android terminates apps if low free memory, but first writes **application state** to flash for fast restart
+  - Both OSes support paging as discussed below
+
+
+### Swapping with Paging
+> An improvement, when a process is switched out, we don't swap all of its memory, only substitute a few pages. The throughput of main memory and disc is less
+> A difference in terminologies: page out/ page in
+
+![](img/12-18-14-06-58.png)
 
 ## Example: The Intel 32 and 64-bit Architectures 
+- Dominant industry chips
+- Pentium CPUs are 32-bit and called IA-32 architecture
+- Current Intel CPUs are 64-bit and called IA-64 architecture
+- Many variations in the chips, cover the main ideas here
+
+- Supports both segmentation and segmentation with paging
+  - Each segment can be 4 GB
+  - Up to 16 K segments per process 
+  - Divided into two partitions
+    - First partition of up to 8 K segments are private to process (kept in **local descriptor table (LDT)**)
+    - Second partition of up to 8K segments shared among all processes (kept in **global descriptor table (GDT)**)
 
 
 
+- CPU generates logical address
+  - Selector given to segmentation unit
+    - Which produces linear addresses
+    - ![](img/12-18-14-08-55.png)
+  - Linear address given to paging unit
+    - Which generates physical address in main memory
+    - Paging units form equivalent of MMU 
+    - Pages sizes can be 4 KB or 4 MB
+
+### Page Address Translation
+
+![](img/12-18-14-09-41.png)
+![](img/12-18-14-09-48.png)
+![](img/12-18-14-10-22.png)
+
+
+### IA-32 Page Address Extensions
+
+- 32-bit address limits led Intel to create **page address extension (PAE)**, allowing 32-bit apps _access to more than 4GB of memory space_
+  - Paging went to a _3-level scheme_
+  - Top two bits refer to a **page directory pointer table**
+  - Page-directory and page-table entries moved to 64-bits in size
+  - Net effect is increasing address space to 36 bits – 64GB of physical memory
+
+![](img/12-18-14-11-17.png)
+
+### Intel x86-64
+
+- Current generation Intel x86 architecture
+- 64 bits is ginormous (> 16 exabytes)
+- In practice _only implement 48 bit addressing_
+  - Page sizes of 4KB, 2MB, **1GB**
+  - **Four** levels of paging hierarchy
+- Can also use PAE so virtual addresses are 48 bits and physical addresses are 52 bits
+
+> For 1G page size, can only access 1 level of page table
+
+![](img/12-18-14-12-02.png)
 
 ## Example: ARMv8 Architecture
+> ~~~~~Omitted~~~~~
+- Dominant mobile platform chip (Apple iOS and Google Android devices for example)
+- Modern, energy efficient, 32-bit CPU
+- 4KBand16KBpages
+- 1 MB and 16 MB pages (termed sections)
+- One-level paging for sections, two- level for smaller pages
+- Two levels of TLBs
+  - Outer level has two micro TLBs (one data, one instruction)
+  - Inner is single main TLB
+  - First inner is checked, on miss outers are checked, and on miss page table walk performed by CPU
+
+![](img/12-18-14-12-57.png)
