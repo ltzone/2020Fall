@@ -7,3 +7,5 @@ template.pdf
 
 .vscode
 *.dSYM
+
+.idea
