@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 
+// maximum length of the input name of a process
 #define PROC_NAME_SIZE 20
 
 typedef struct MemBlock {
@@ -15,7 +16,7 @@ typedef struct MemBlock {
 mem_block* mem_head = NULL;
 
 int request_memory(char* proc_name, int request_size, char mode);
-
+// depend on the input mode, request_memory() will call the following three methods
 int request_memory_first_fit(char* proc_name, int request_size);
 int request_memory_best_fit(char* proc_name, int request_size);
 int request_memory_worst_fit(char* proc_name, int request_size);
@@ -122,13 +123,17 @@ void compact_mem(){
     mem_block* current_block = mem_head;
     int free_mem = 0;
     int used_mem = 0;
+    // Release the (consecutive) unused blocks at the head
     while (current_block != NULL && current_block->status == 0){
         mem_head = current_block->next;
         free_mem += current_block->size;
         free(current_block);
         current_block = mem_head;
     }
+    // Now the head of the linked-list is the first allocated 
+    // block in the original list
 
+    // Move the first block to the head of the actual memory
     mem_block* prev_block = current_block;
     current_block->beg = used_mem;
     used_mem += current_block->size;
@@ -136,11 +141,13 @@ void compact_mem(){
 
     while (current_block != NULL){
         if (current_block->status == 0){
+            // For unused blocks, free them
             free_mem += current_block->size;
             mem_block* tmp = current_block;
             current_block = current_block->next;
             free(tmp);
         } else {
+            // For used blocks, move them to the left side
             current_block->beg = used_mem;
             used_mem += current_block->size;
             prev_block->next = current_block;
@@ -148,6 +155,7 @@ void compact_mem(){
             current_block = current_block->next;
         }
     }
+    // Noe all rhe remaining space on the right is a single unused block
     prev_block->next = malloc(sizeof(mem_block));
     prev_block->next->beg = used_mem;
     strcpy(prev_block->next->name,"Unused");
@@ -177,6 +185,13 @@ int request_memory(char* proc_name, int request_size, char mode){
 }
 
 void split_block(char* proc_name, int request_size, mem_block* current_block){
+    if (request_size == current_block->size){ 
+        // If the memory exactly fits the block, just rename and allocate it
+        current_block->status = 1;
+        strcpy(current_block->name, proc_name);
+        return;
+    }
+    // otherwise, the block needs to be split
     mem_block* new_hole = malloc(sizeof(mem_block));
     new_hole->next = current_block->next;
     new_hole->size = current_block->size - request_size;
@@ -194,6 +209,7 @@ int request_memory_first_fit(char* proc_name, int request_size){
     mem_block* current_block = mem_head;
     while (current_block != NULL){
         if (current_block->status == 0 && current_block->size >= request_size){
+            // block is unused and fit
             break;
         }
         current_block = current_block -> next;
@@ -210,9 +226,11 @@ int request_memory_best_fit(char* proc_name, int request_size){
     mem_block* current_block = mem_head;
     while(current_block != NULL){
         if (current_block->status == 0 && current_block->size >= request_size){
+            // block is unused and fit
             if (best_block == NULL){
                 best_block = current_block;
             } else if (best_block->size > current_block->size){
+                // update the best block
                 best_block = current_block;
             }
         }
@@ -230,9 +248,11 @@ int request_memory_worst_fit(char* proc_name, int request_size){
     mem_block* current_block = mem_head;
     while(current_block != NULL){
         if (current_block->status == 0 && current_block->size >= request_size){
+            // block is unused and fit
             if (worst_block == NULL){
                 worst_block = current_block;
             } else if (worst_block->size < current_block->size){
+                // update the worst block
                 worst_block = current_block;
             }
         }
@@ -250,6 +270,7 @@ int release_memory(char* proc_name){
     int release_cnt = 0;
     mem_block* current_block = mem_head;
     while (current_block != NULL){
+        // mark released block as unused
         if (strcmp(current_block->name,proc_name) == 0){
             current_block->status = 0;
             strcpy(current_block->name,"Unused");
@@ -259,6 +280,7 @@ int release_memory(char* proc_name){
     }
     current_block = mem_head;
     while (current_block->next != NULL){
+        // compact consecutive blocks
         if (current_block->status == 0 && current_block->next->status == 0){
             current_block->size += current_block->next->size;
             mem_block* tmp = current_block->next;
