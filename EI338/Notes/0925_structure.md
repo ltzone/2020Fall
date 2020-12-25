@@ -3,7 +3,7 @@ title: 【System Engineering】OS2 - Structures
 url: se2-structure
 date: 2020-09-25 14:42:46
 tags: 
-- System Enginnering
+- System Engineering
 
 categories: 
 - Courses
