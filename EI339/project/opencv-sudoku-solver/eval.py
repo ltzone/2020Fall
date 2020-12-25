@@ -6,7 +6,7 @@ import os
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-model = models.load_model('train/res1')
+model = models.load_model('train/archive/res_cn5_0.001_tanh_round_20_32')
 
 def print_middle_features():
     imgs = load_mnist.test_images[:1]
@@ -29,7 +29,8 @@ def print_middle_features():
             cv2.imshow(f'Feature {j} of the {i}th layer', np.mat(result[:, :, j]))
             cv2.waitKey(0)
 
-model.evaluate(load_mnist.test_images, load_mnist.test_labels,
-               batch_size=32, verbose=1)
+model.evaluate(load_mnist.cn_test_images, load_mnist.cn_test_labels,
+               batch_size=32)
 # model.evaluate(load_mnist.all_test_images, load_mnist.all_test_labels,
 #                batch_size=32, verbose=1)
+

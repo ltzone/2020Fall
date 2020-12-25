@@ -3,7 +3,6 @@ import pickle
 import numpy as np
 import struct
 from tensorflow.keras.utils import to_categorical
-import process_cn
 
 
 def load_images(file_name):
@@ -27,7 +26,7 @@ def load_labels(file_name):
     return labels
 
 
-def load_cn_dataset(filename='mnist/ei339-cn.pik'):
+def load_cn_dataset(filename='mnist/ei339-cn-manual.pik'):
     input_file = open(filename, 'rb')
     input = pickle.load(input_file)
     input_file.close()
@@ -47,7 +46,7 @@ test_images = test_images[:, :, :, np.newaxis]
 test_labels = load_labels(filename_test_labels)
 
 cn_train_labels, cn_train_images, \
-    cn_test_labels, cn_test_images = load_cn_dataset('mnist/ei339-cn.pik')
+    cn_test_labels, cn_test_images = load_cn_dataset('mnist/ei339-cn-manual.pik')
 cn_test_images = cn_test_images[:, :, :, np.newaxis]
 cn_train_images = cn_train_images[:, :, :, np.newaxis]
 
@@ -65,8 +64,20 @@ all_train_labels = np.concatenate((train_labels, cn_train_labels))
 num_classes = 10
 train_labels = to_categorical(train_labels, num_classes)
 test_labels = to_categorical(test_labels, num_classes)
+cn_train_labels = to_categorical(cn_train_labels-10, num_classes)
+cn_test_labels = to_categorical(cn_test_labels-10, num_classes)
 
 all_num_classes = 20
 all_train_labels = to_categorical(all_train_labels, all_num_classes)
 all_test_labels = to_categorical(all_test_labels, all_num_classes)
 
+cn_train_images = cn_train_images.astype('float32')
+cn_test_images = cn_test_images.astype('float32')
+cn_train_images /= 255
+cn_test_images /= 255
+
+# round to 0 or 1
+train_images = np.around(train_images)
+test_images = np.around(test_images)
+cn_train_images = np.around(cn_train_images)
+cn_test_images = np.around(cn_test_images)
