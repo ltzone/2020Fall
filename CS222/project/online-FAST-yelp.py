@@ -148,7 +148,7 @@ class OnlineFASTSolution:
             expected_capacity = 0
             for u in priority_users:
                 if rec_service in self.recommendation_list_ori_set[u]:
-                    expected_capacity += self.user_probability[u]
+                    expected_capacity += self.user_probability
             return service_seat[rec_service] - 1 >= expected_capacity / self.user_num * remain_user_cnt
         if self.mode == 'preempt':
             return service_seat[rec_service] > 0
@@ -362,20 +362,20 @@ if __name__ == "__main__":
     mode = "fast"
     current_time = time.strftime("%d-%H:%M", time.localtime())
     online_fast_solver = OnlineFASTSolution(
-        service_num=50,
-        user_num=800,
+        service_num=3774,
+        user_num=11252,
         fast_top_n=5,
         recommendation_total_round=100,
-        loc_recommendation_list_ori='datasets/data1/recommendation_list_ori.csv',
-        loc_preference_score='datasets/data1/preference_score.csv',
+        loc_recommendation_list_ori='datasets/data_yelp_Phoenix/recommendation_list_ori.csv',
+        loc_preference_score='datasets/data_yelp_Phoenix/preference_score.csv',
         # user_requests=load_requests('datasets/data1/random_user_0.6.csv'),
-        user_requests=generate_requests_dynamic_size(probability=0.6,user_count=800,rounds=100),
+        user_requests=generate_requests_dynamic_size(probability=0.8,user_count=11252,rounds=100),
         # user_requests=generate_requests_dynamic_size_compound([(200,0.5),(200,0.6),(200,0.7),(200,0.8)]),
         # user_probability=[0.6 for i in range(200)] + [0.7 for i in range(200)] \
         #                     + [0.8 for i in range(200)] + [0.9 for i in range(200)],
-        user_probability=[0.6 for i in range(800)],
-        service_capacity=load_capacity('datasets/data1/service_capacity.csv'),
-        loc_results=f'results/[{current_time}]{mode}_compound.csv',
+        user_probability=0.8,
+        service_capacity=load_capacity('datasets/data_yelp_Phoenix/restaurant_capacity.csv'),
+        loc_results=f'results/[{current_time}]{mode}_phoenix.csv',
         mode=mode  # 'fast' or 'preempt'
     )
     online_fast_solver.run()
