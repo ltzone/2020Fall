@@ -3,10 +3,10 @@ title: 【Artificial Intelligence】Decision Networks and Value of Information
 url: ai-decision
 date: 2020-12-01 14:21:34
 tags: 
-- Courses
+- Artificial Intelligence
 
 categories: 
-- Artificial Intelligence
+- Courses
 
 ---
 
@@ -56,7 +56,7 @@ categories:
     \mathrm{EU}(\text { leave })=\sum_{w} P(w) U(\text { leave }, w)  =0.7 \cdot 100+0.3 \cdot 0=70
     $$
 - Umbrella = take
-    $$\mathrm{EU}(\text { take })=\sum_{w} P(w) U(\text { take }, w) =0.7 \cdot 20+0.3 \cdot 70=35\end{array}
+    $$\begin{array} \mathrm{EU}(\text { take })=\sum_{w} P(w) U(\text { take }, w) =0.7 \cdot 20+0.3 \cdot 70=35\end{array}
     $$
 - Optimal decision = leave
     $$

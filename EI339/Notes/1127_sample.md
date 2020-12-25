@@ -3,10 +3,10 @@ title: 【Artificial Intelligence】Bayes' Nets - Sampling
 url: ai-sample
 date: 2020-11-27 10:08:51
 tags: 
-- Courses
+- Artificial Intelligence
 
 categories: 
-- Artificial Intelligence
+- Courses
 
 ---
 

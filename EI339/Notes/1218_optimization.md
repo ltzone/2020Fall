@@ -17,6 +17,7 @@ $$
 \max _{w} l l(w)=\max _{w} \sum_{i} \log P\left(y^{(i)} \mid x^{(i)} ; w\right)
 $$
 
+<!--more-->
 [toc]
 
 
