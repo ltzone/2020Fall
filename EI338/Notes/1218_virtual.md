@@ -3,7 +3,7 @@ title: 【System Engineering】OS10 - Virtual Memory
 url: se2-virtual
 date: 2020-12-18 14:13:15
 tags: 
-- System Engineeriing
+- System Engineering
 
 categories: 
 - Courses
@@ -442,32 +442,308 @@ categories:
 
 ## Allocation of Frames
 
+- Each process needs **minimum** number of frames
+- Example: IBM 370 – 6 pages to handle SS MOVE instruction:
+  - instruction is 6 bytes, might span 2 pages 
+  > The impact of the instruciton may span larger than its byte length
+  - 2 pages to handle **from**
+  - 2 pages to handle **to**
+- Maximum of course is total frames in the system 
+- Two major allocation schemes
+  - fixed allocation
+  - priority allocation 
+- Many variations
 
 
+### Fixed Allocation
 
+Two strategy
+
+- **Equal** allocation – For example, if there are 100 frames (after allocating frames for the OS) and 5 processes, give each process 20 frames
+  - Keep some as free frame buffer pool
+- Proportional allocation – Allocate according to the size of process
+  - Dynamic as degree of *multiprogramming*, process sizes change
+  - $s_{i}=$ size of process $p_{i}$
+  - $S=\sum s_{i}$
+  - $m=$ total number of frames
+  - $a_{i}=$ allocation for $p_{i}=\frac{s_{i}}{S} \times m$
+    $$
+    \begin{array}{l}
+    m=64 \\
+    S_{1}=10 \\
+    s_{2}=127 \\
+    a_{1}=\frac{10}{137} \times 62 \approx 4 \\
+    a_{2}=\frac{127}{137} \times 62 \approx 57
+    \end{array}
+    $$
+
+
+#### Global vs. Local Allocation
+
+- Global replacement – process selects a replacement frame from the set of all frames; one process can take a frame from another
+  - But then process execution time can vary greatly
+  > 代价可能不同，产生极大variation
+  - But greater throughput so more common
+- Local replacement – each process selects from only its own set of allocated frames
+  - More consistent per-process performance 
+  - But possibly **underutilized** memory
+
+
+### Reclaiming Pages
+> 预取
+
+- A strategy to implement global page-replacement policy
+- All memory requests are satisfied from the free-frame list, rather than waiting for the list to drop to zero before we begin selecting pages for replacement,
+- Page replacement is triggered when the list falls below a certain threshold.
+- This strategy attempts to ensure there is always sufficient free memory to satisfy new requests.
+
+
+![](img/12-25-13-07-50.png)
+
+
+### Non-Uniform Memory Access
+> An extension on NUMA HW
+- So far all memory accessed equally
+- Many systems are NUMA – speed of access to memory varies
+  - Consider system boards containing CPUs and memory, interconnected over a system bus
+- NUMA multiprocessing architecture
+  ![](img/12-25-13-08-50.png)
+> CPU has to **sense** how far the memory and request is
+- Optimal performance comes from allocating memory “close to” the CPU on which the thread is scheduled
+  - And modifying the scheduler to schedule the thread on the same system board when possible
+  > Necessary and Profitable since **data movement** is more expensive than **process follow memory**
+  > Let process (CPU being scheduled) goes with memory is more beneficial
+  - Solved by Solaris by creating **lgroups**
+    - Structure to track CPU / Memory low latency groups
+    - Used my schedule and pager
+    - When possible schedule all threads of a process and allocate all memory for that process within the lgroup
 
 ## Thrashing
 
+- If a process does not have “enough” pages, the page- fault rate is very high
+  - Page fault to get page
+  - Replace existing frame
+  - But quickly need replaced frame back 
+  - This leads to:
+    - Low CPU utilization
+    - Operating system thinking that it needs to increase the degree of multiprogramming 
+    - Another process added to the system
+
+- **Thrashing**. A process is busy swapping pages in and out
+> ![](img/12-25-13-11-24.png)
+> Why? ideally, with more threads, the CPU utilization should increase
+> Because page fault happens! more time are spent waiting IO
+
+### Demand Paging and Thrashing
+> Deeper into the principle
+
+- Recall: Why does demand paging work?
+  - **Locality model**
+  - Process migrates from one locality to another
+  - Localities may overlap 
+- Why does thrashing occur?
+  $\sum$size of locality > total memory size
+- Limit effects by using local or priority page replacement
+
+> Locality In A Memory-Reference Pattern
+> ![](img/12-25-13-13-44.png)
+> Will work only if the pages allocated can cover the locality region
 
 
+### Working-Set Model
+> Solution
+> First we define, a model to describe locality
+
+- $\Delta \equiv$ working-set window $\equiv$ a fixed number of page references Example: 10,000 instructions
+- $W S S_{i}$ (working set of Process $P_{i}$ ) = total number of pages referenced in the most recent $\Delta$ (varies in time)
+  - if $\Delta$ too small will not encompass entire locality
+  > less efficient, fatal
+  - if $\Delta$ too large will encompass several localities
+  - if $\Delta=\infty \Rightarrow$ will encompass entire program
+- $D=\Sigma W S S_{i} \equiv$ total demand frames
+  - Approximation of locality
+
+- if $D>m \Rightarrow$ Thrashing
+- Policy if D > m, then suspend or _swap out one of the processes_
+
+![](img/12-25-13-16-04.png)
+
+### Implementaion: Keeping Track of the Working Set
+
+- Approximate with interval timer + a reference bit
+- Example: $\Delta=10,000$
+  - Timer interrupts after every 5000 time units
+  - Keep in memory 2 bits for each page
+  - Whenever a timer **interrupts copy** and sets the values of all reference bits to 0
+  > Fall into kernel mode
+  - If one of the bits in memory $=1 \Rightarrow$ page in working set
+- Why is this not completely accurate?
+- Improvement $=10$ bits and interrupt every 1000 time units
 
 
-## Memory-Mapped Files
+### Page-Fault Frequency
+> A more accurate evaluation metric than working set
+
+
+- More direct approach than WSS
+- Establish “acceptable” page-fault frequency (PFF) rate and use local replacement policy
+  - If actual rate too low, process loses frame 
+  - If actual rate too high, process gains frame
+
+![](img/12-25-13-17-46.png)
+
+
+### Working Sets and Page Fault Rates
+
+
+- Direct relationship between working set of a process and its page-fault rate
+- Working set changes over time
+- Peaks and valleys over time
+> 波峰、波谷will concide with page fault rate and working sets
+![](img/12-25-13-18-57.png)
 
 
 
 
 
 ## Allocating Kernel Memory
+> Totally different with user memory
+> Note the kernel processes matter a lot to the performance the system
 
+- Treated differently from user memory
+- Often allocated from a free-memory pool
+  - Kernel requests memory for structures of varying sizes
+  - Some kernel memory needs to be contiguous 
+    - I.e. for device I/O 
+    > Because on HW, consecutive reading is a lot more efficient than random reading
 
+### Buddy System
 
+- Allocates memory from fixed-size segment consisting of physicallycontiguous pages
+- Memory allocated using **power-of-2 allocator**
+  - Satisfies requests in units sized as power of 2
+  - Request rounded up to next highest power of 2
+  - When smaller allocation needed than is available, current chunk split into two buddies of next-lower power of 2
+    - Continue until appropriate sized chunk available
+- For example, assume $256 \mathrm{~KB}$ chunk available, kernel requests $21 \mathrm{~KB}$
+  - Split into $A_{L \text { and }} A_{R}$ of $128 \mathrm{~KB}$ each
+    - One further divided into $\mathrm{B}_{\mathrm{L}}$ and $\mathrm{B}_{\mathrm{R}}$ of $64 \mathrm{~KB}$
+      - One further into $\mathrm{C}_{\mathrm{L}}$ and $\mathrm{C}_{\mathrm{R}}$ of $32 \mathrm{~KB}$ each $-$ one used to satisfy request
+- Advantage - quickly **coalesce** unused chunks into larger chunk
+- Disadvantage - fragmentation
+  > **Internel** Fragmentation is large $2^x$
 
+![](img/12-25-13-22-53.png)
+
+### Slab Allocator
+
+- Alternate strategy
+- Slab is one or more physically contiguous pages
+- Cache consists of one or more slabs
+> Different from cache in Architecture
+- Single cache for each unique kernel data structure
+    - Each cache filled with objects - instantiations of the data structure
+- When cache created, filled with objects marked as `free`
+- When structures stored, objects marked as `used`
+- If slab is full of used objects, next object allocated from empty slab
+  - If no empty slabs,new slab allocated
+- Benefits include no fragmentation, fast memory request satisfaction
+> Like paging, different objects can be not consecutive, but within an objet, it will be contiguous
+> Since the need of coalesce between obejcts is not very significant
+![](img/12-25-13-25-55.png)
 
 ## Other Considerations
+- Prepaging
+- Page size
+- TLB reach
+- Inverted page table
+- Program structure
+- I/O interlock and page locking
+
+### Priority Allocation
+> To allocate memory according to the prority of the process(scheduling)
+- Use a proportional allocation scheme using priorities rather than size
+- If process Pi generates a page fault,
+  - select for replacement one of its frames
+  - select for replacement a frame from a process with lower priority number
+> Because the execution rate of low priority process is low, less fault rate is desired
 
 
+### Memory Compression
+
+- **Memory compression** -- rather than paging out modified frames to swap space, we compress several frames into a single frame, enabling the system to reduce memory usage without resorting to swapping pages.
+- Consider the following free-frame-list consisting of 6 frames
+![](img/12-25-13-27-58.png)
+> The 4 modified frame list(dirty data) must be swapped out to update in the externel storage
+> We can put them into one "frame" and write out together
+
+- Assume that this number of free frames falls below a certain threshold that triggers page replacement. The replacement algorithm (say, an LRU approximation algorithm) selects four frames -- 15, 3, 35, and 26 to place on the free-frame list. It first places these frames on a modified-frame list. Typically, the modified-frame list would next be written to swap space, making the frames available to the free-frame list. An alternative strategy is to compress a number of frames$\mdash$say, three$\mdash$and store their compressed versions n a single page frame.
+
+- An alternative to paging is **memory compression**.
+- Rather than paging out modified frames to swap space, we compress several frames into a single frame, enabling the system to reduce memory usage without resorting to swapping pages.
+
+![](img/12-25-13-29-49.png)
+
+### Prepaging
+
+- To reduce the large number of page faults that occurs at process startup
+- Prepage all or some of the pages a process will need, before they are referenced
+- But if prepaged pages are unused, _I/O and memory was wasted_
+- Assume s pages are prepaged and α of the pages is used
+  - Is cost of $s\times\alpha$ save pages faults > or < than the cost of prepaging $s \times (1- \alpha)$ unnecessary pages?
+  - $\alpha$ near zero $\Rightarrow$ prepaging loses
 
 
+### Page Size
 
-## Operating-System Examples
+- Sometimes OS designers have a choice
+  - Especially if running on custom-built CPU
+- Page size selection must take into consideration: 
+  - Fragmentation
+  - Page table size
+  - **Resolution**
+  - I/O overhead
+  - Number of page faults
+  - Locality
+  - TLB size and effectiveness
+- Always power of 2, usually in the range $2^{12}$ (4,096 bytes) to $2^{22}$ (4,194,304 bytes)
+- On average, growing over time
+
+
+### Page size on TLB Reach
+
+- TLB Reach - The amount of memory accessible from the TLB
+- TLB Reach = (TLB Size) X (Page Size)
+- Ideally, the working set of each process is stored in the TLB
+  - Otherwise there is a high degree of page faults
+- Increase the Page Size
+  - This may lead to an increase in fragmentation as not all applications require a large page size
+- Provide Multiple Page Sizes
+  - This allows applications that require larger page sizes the opportunity to use them without an increase in fragmentation
+
+### Program Structure
+
+- Program structure
+- `int[128,128]` data;
+- Each row is stored in one page 
+- Program1
+  ```
+  for (j = 0; j <128; j++)
+      for (i = 0; i < 128; i++)
+            data[i,j] = 0;
+  ```
+  128 x 128 = 16,384 page faults 
+- Program2
+  ```
+  for (i = 0; i < 128; i++)
+      for (j = 0; j < 128; j++)
+          data[i,j] = 0;
+  ```
+  128 page faults
+
+### I/O interlock
+> buffer place Must be pinned, should not be swapped out
+- I/O Interlock – Pages must sometimes be locked into memory
+- Consider I/O - Pages that are used for copying a file from a device must be locked from being selected for eviction by a page replacement algorithm
+- **Pinning** of pages to lock into memory
+
