@@ -111,7 +111,7 @@ Typically, a number associated with each system call
   > - **Debugger**, requires system support, almost all debugger requires `dump memory` (into special file of the disk)
 - File Management (读写、属性)
 - Device Management （request & release, read and write, attributes）
-- Information Maontenance (date, time, system attribute)
+- Information Maintenance (date, time, system attribute)
   > Especially useful in debug mode
   > OS: **strace** -> system calls
   > CPU: single step -> **trap** -> debugger

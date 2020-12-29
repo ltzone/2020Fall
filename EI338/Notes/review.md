@@ -12,6 +12,7 @@ categories:
 
 For CA notes, online notes are not complete, please see slides. OS notes are complete. Happy reviewing!
 
+Updated on Dec 26, 2020 10:00 PM
 
 |   Chapter  	|   Key Concepts                                                                                                                        	|
 |------------	|---------------------------------------------------------------------------------------------------------------------------------------	|
@@ -712,7 +713,7 @@ Almost no, just review all the slides in lec4-CA :)
 ### Structure of the Page Table
 - Hierarchical Page Tables
 - Two-Level Paging Example
-- 64-bit Logical Address Space
+- ~~64-bit Logical Address Space~~
 
 
 
