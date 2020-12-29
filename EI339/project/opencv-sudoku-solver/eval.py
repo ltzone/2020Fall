@@ -1,12 +1,14 @@
 from tensorflow.keras import layers, models
 import numpy as np
+from tensorflow_core.python.keras.utils import to_categorical
+
 import load_mnist
 import cv2
 import os
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-model = models.load_model('train/archive/res_cn5_0.001_tanh_round_20_32')
+model = models.load_model('train/archive2/ALL_28_22_22_e10_b100_maxpool_mixed_doubleconn')
 
 def print_middle_features():
     imgs = load_mnist.test_images[:1]
@@ -29,8 +31,11 @@ def print_middle_features():
             cv2.imshow(f'Feature {j} of the {i}th layer', np.mat(result[:, :, j]))
             cv2.waitKey(0)
 
-model.evaluate(load_mnist.cn_test_images, load_mnist.cn_test_labels,
-               batch_size=32)
+_, _, cn_test_labels, _ = load_mnist.load_cn_dataset('mnist/ei339-cn-manual.pik')
+cn_test_labels = to_categorical(cn_test_labels, 20)
+
+
+model.evaluate(load_mnist.cn_test_images, cn_test_labels)
 # model.evaluate(load_mnist.all_test_images, load_mnist.all_test_labels,
 #                batch_size=32, verbose=1)
 

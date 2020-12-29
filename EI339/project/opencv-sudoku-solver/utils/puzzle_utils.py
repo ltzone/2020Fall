@@ -97,6 +97,12 @@ def extract_digit(cell, debug=False):
     if len(cnts) == 0:
         return None
 
+    # otherwise, find the largest contour in the cell and create a
+    # mask for the contour
+    # c = max(cnts, key=cv2.contourArea)
+    # mask = np.zeros(thresh.shape, dtype="uint8")
+    # cv2.drawContours(mask, [c], -1, 255, -1)
+
     # otherwise, find contours large enough in the cell and create a
     # mask for the contour
     mask = np.zeros(thresh.shape, dtype="uint8")

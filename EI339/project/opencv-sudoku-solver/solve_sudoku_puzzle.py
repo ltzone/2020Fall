@@ -4,15 +4,28 @@
 # import the necessary packages
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
-from sudoku import Sudoku
 from utils.puzzle_utils import *
 import numpy as np
 import argparse
 import imutils
 import cv2
 import os
+from sudoku_solver import SudokuSolution
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
+# SHOW_MAP = {
+#     1:"1", 2:"2", 3:"3", 4:"4", 5:"5", 6:"6", 7:"7", 8:"8", 9:"9", 0:"",
+#     10:"十", 11:"一", 12:"二", 13:"三", 14:"四", 15:"五", 16:"六",
+#     17:"七", 18:"八", 19:"九"
+# }
+
+SHOW_MAP = {
+    1:"1", 2:"2", 3:"3", 4:"4", 5:"5", 6:"6", 7:"7", 8:"8", 9:"9", 0:"",
+    10:"0", 11:"1", 12:"2", 13:"3", 14:"4", 15:"5", 16:"6",
+    17:"7", 18:"8", 19:"9"
+}
+
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -80,13 +93,15 @@ for y in range(0, 9):
             # resize the cell to 28x28 pixels and then prepare the
             # cell for classification
             roi = cv2.resize(digit, (28, 28))
-            roi = roi.astype("float") / 255.0
+            roi = roi.astype("float32") / 255.0
             roi = img_to_array(roi)
             roi = np.expand_dims(roi, axis=0)
 
             # classify the digit and update the sudoku board with the
             # prediction
-            pred_results = model.predict(roi)
+            print(roi)
+            # pred_results = model.predict(roi)
+            pred_results = model.predict(np.around(roi))
             pred = pred_results.argmax(axis=1)[0]
             print(pred_results, pred)
             board[y, x] = pred
@@ -112,27 +127,26 @@ for i, cellRow in enumerate(cellLocs):
 
         # draw the result digit on the sudoku puzzle image
         cv2.putText(puzzleImage, str(board[i,j]), (textX, textY),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 0), 2)
 
 # show the output image
 cv2.imshow("Recognition Result", puzzleImage)
 cv2.waitKey(0)
 
-
 # construct a sudoku puzzle from the board
 print("[INFO] OCR'd sudoku board:")
-puzzle = Sudoku(3, 3, board=board.tolist())
-puzzle.show()
+print(board)
+puzzle = SudokuSolution(board)
 
 # solve the sudoku puzzle
 print("[INFO] solving sudoku puzzle...")
 solution = puzzle.solve()
-solution.show_full()
+print(solution)
 
 # loop over the cell locations and board
-for (cellRow, boardRow) in zip(cellLocs, solution.board):
+for i, (cellRow, boardRow) in enumerate(zip(cellLocs, solution)):
     # loop over individual cell in the row
-    for (box, digit) in zip(cellRow, boardRow):
+    for j, (box, digit) in enumerate(zip(cellRow, boardRow)):
         # unpack the cell coordinates
         startX, startY, endX, endY = box
 
@@ -143,9 +157,15 @@ for (cellRow, boardRow) in zip(cellLocs, solution.board):
         textX += startX
         textY += endY
 
+        show_digit = SHOW_MAP[digit]
+
         # draw the result digit on the sudoku puzzle image
-        cv2.putText(puzzleImage, str(digit), (textX, textY),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
+        if board[i][j] != 0: # known digits
+            cv2.putText(puzzleImage, str(show_digit), (textX, textY),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 0), 2)
+        else:
+            cv2.putText(puzzleImage, str(show_digit), (textX, textY),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
 # show the output image
 cv2.imshow("Sudoku Result", puzzleImage)
