@@ -4,16 +4,28 @@
 # import the necessary packages
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
-from utils.puzzle_utils import *
+from utils.mnist_test_utils import *
 import numpy as np
 import argparse
 import imutils
 import cv2
 import os
 from sudoku_solver import SudokuSolution
+from contextlib import contextmanager
+
+
+@contextmanager
+def print_options(*args, **kwargs):
+    original_options = np.get_printoptions()
+    np.set_printoptions(*args, **kwargs)
+
+    try:
+        yield
+    finally:
+        np.set_printoptions(**original_options)
+
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-
 # SHOW_MAP = {
 #     1:"1", 2:"2", 3:"3", 4:"4", 5:"5", 6:"6", 7:"7", 8:"8", 9:"9", 0:"",
 #     10:"十", 11:"一", 12:"二", 13:"三", 14:"四", 15:"五", 16:"六",
@@ -48,7 +60,7 @@ image = imutils.resize(image, width=600)
 
 # find the puzzle in the image and then
 (puzzleImage, warped) = find_puzzle(image, debug=args["debug"] > 0)
-
+puzzleImage_cpy = puzzleImage.copy()
 # initialize our 9x9 sudoku board
 board = np.zeros((9, 9), dtype="int")
 
@@ -99,11 +111,12 @@ for y in range(0, 9):
 
             # classify the digit and update the sudoku board with the
             # prediction
-            print(roi)
-            # pred_results = model.predict(roi)
-            pred_results = model.predict(np.around(roi))
+            # print(roi)
+            pred_results = model.predict(roi)
+            # pred_results = model.predict(np.around(roi))
             pred = pred_results.argmax(axis=1)[0]
-            print(pred_results, pred)
+            with print_options(precision=3, suppress=True):
+                print(pred_results, pred)
             board[y, x] = pred
 
     # add the row to our cell locations
@@ -141,32 +154,33 @@ puzzle = SudokuSolution(board)
 # solve the sudoku puzzle
 print("[INFO] solving sudoku puzzle...")
 solution = puzzle.solve()
-print(solution)
+if solution is None:
+    print("Error Detection!")
+else:
+    # loop over the cell locations and board
+    for i, (cellRow, boardRow) in enumerate(zip(cellLocs, solution)):
+        # loop over individual cell in the row
+        for j, (box, digit) in enumerate(zip(cellRow, boardRow)):
+            # unpack the cell coordinates
+            startX, startY, endX, endY = box
 
-# loop over the cell locations and board
-for i, (cellRow, boardRow) in enumerate(zip(cellLocs, solution)):
-    # loop over individual cell in the row
-    for j, (box, digit) in enumerate(zip(cellRow, boardRow)):
-        # unpack the cell coordinates
-        startX, startY, endX, endY = box
+            # compute the coordinates of where the digit will be drawn
+            # on the output puzzle image
+            textX = int((endX - startX) * 0.33)
+            textY = int((endY - startY) * -0.2)
+            textX += startX
+            textY += endY
 
-        # compute the coordinates of where the digit will be drawn
-        # on the output puzzle image
-        textX = int((endX - startX) * 0.33)
-        textY = int((endY - startY) * -0.2)
-        textX += startX
-        textY += endY
+            show_digit = SHOW_MAP[digit]
 
-        show_digit = SHOW_MAP[digit]
+            # draw the result digit on the sudoku puzzle image
+            if board[i][j] != 0: # known digits
+                cv2.putText(puzzleImage_cpy, str(show_digit), (textX, textY),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 0), 2)
+            else:
+                cv2.putText(puzzleImage_cpy, str(show_digit), (textX, textY),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
-        # draw the result digit on the sudoku puzzle image
-        if board[i][j] != 0: # known digits
-            cv2.putText(puzzleImage, str(show_digit), (textX, textY),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 0), 2)
-        else:
-            cv2.putText(puzzleImage, str(show_digit), (textX, textY),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-
-# show the output image
-cv2.imshow("Sudoku Result", puzzleImage)
-cv2.waitKey(0)
+    # show the output image
+    cv2.imshow("Sudoku Result", puzzleImage_cpy)
+    cv2.waitKey(0)

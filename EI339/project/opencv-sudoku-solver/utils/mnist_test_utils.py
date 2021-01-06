@@ -1,9 +1,8 @@
-# import the necessary packages
-from imutils.perspective import four_point_transform
-from skimage.segmentation import clear_border
 import numpy as np
 import imutils
 import cv2
+from imutils.perspective import four_point_transform
+from skimage.segmentation import clear_border
 
 
 def find_puzzle(image, debug=False):
@@ -81,6 +80,17 @@ def extract_digit(cell, debug=False):
     # connected borders that touch the border of the cell
     thresh = cv2.threshold(cell, 0, 255,
                            cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
+    # This is new!
+    # resize the picture, bolden the digit and eliminate border
+    # SCALE_FACTOR = 1
+    # scaled_height = int(thresh.shape[0] * SCALE_FACTOR)
+    # scaled_width = int(thresh.shape[1] * SCALE_FACTOR)
+    # top_pad = int((scaled_height - thresh.shape[0]) / 2)
+    # left_pad = int((scaled_width - thresh.shape[1]) / 2)
+    # big_mask = np.zeros((scaled_height, scaled_width), dtype="uint8")
+    # big_mask = cv2.resize(thresh, big_mask.shape)
+    # thresh = big_mask[top_pad:top_pad + thresh.shape[0], left_pad:left_pad + thresh.shape[1]]
     thresh = clear_border(thresh)
 
     # check to see if we are visualizing the cell thresholding step
@@ -103,18 +113,38 @@ def extract_digit(cell, debug=False):
     mask = np.zeros(thresh.shape, dtype="uint8")
     cv2.drawContours(mask, [c], -1, 255, -1)
 
+    # otherwise, find contours large enough in the cell and create a
+    # mask for the contour
+    # mask = np.zeros(thresh.shape, dtype="uint8")
+    # cv2.drawContours(mask, cnts, -1, 255, -1)
+
+    # if debug:
+    #     cv2.imshow("Mask", mask)
+    #     cv2.waitKey(0)
+
+
     # compute the percentage of masked pixels relative to the total
     # area of the image
     (h, w) = thresh.shape
     percent_filled = cv2.countNonZero(mask) / float(w * h)
 
-    # if less than 3% of the mask is filled then we are looking at
+    # if less than 1% of the mask is filled then we are looking at
     # noise and can safely ignore the contour
-    if percent_filled < 0.03:
+    if percent_filled < 0.01:
         return None
 
     # apply the mask to the thresholded cell
     digit = cv2.bitwise_and(thresh, thresh, mask=mask)
+
+    # bolden
+    left_digit = np.roll(digit, 1, axis=0)
+    right_digit = np.roll(digit, -1, axis=0)
+    top_digit = np.roll(digit, 1, axis=1)
+    bot_digit = np.roll(digit, -1, axis=1)
+    x_bolden_digit = cv2.bitwise_or(left_digit, right_digit)
+    y_bolden_digit = cv2.bitwise_or(top_digit, bot_digit)
+    digit = cv2.bitwise_or(digit, x_bolden_digit)
+    digit = cv2.bitwise_or(digit, y_bolden_digit)
 
     # check to see if we should visualize the masking step
     if debug:
@@ -123,18 +153,3 @@ def extract_digit(cell, debug=False):
 
     # return the digit to the calling function
     return digit
-
-
-def extract_dataset(cell, debug=False):
-    # apply automatic thresholding to the cell and then clear any
-    # connected borders that touch the border of the cell
-    thresh = cv2.threshold(cell, 0, 255,
-                           cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    thresh = clear_border(thresh)
-
-    # check to see if we are visualizing the cell thresholding step
-    if debug:
-        cv2.imshow("Cell Thresh", thresh)
-        cv2.waitKey(0)
-
-    return 255 - thresh

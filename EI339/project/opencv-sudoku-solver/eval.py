@@ -8,10 +8,10 @@ import os
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-model = models.load_model('train/archive2/ALL_28_22_22_e10_b100_maxpool_mixed_doubleconn')
+model = models.load_model('train_res/model4_061128')
 
 def print_middle_features():
-    imgs = load_mnist.test_images[:1]
+    imgs = load_mnist.cn_test_images[:1]
 
     conv1 = model.layers[0](imgs)
     pool1 = model.layers[1](conv1)
@@ -26,16 +26,16 @@ def print_middle_features():
     print([i.shape for i in middle_results])
     for i, result in enumerate(middle_results[:4]):
         result = result[0]
+        feature_height = result[:, :, 0].shape[0]
         feature_num = result.shape[2]
+        foo = np.ones([feature_height, 2])
         for j in range(feature_num):
-            cv2.imshow(f'Feature {j} of the {i}th layer', np.mat(result[:, :, j]))
-            cv2.waitKey(0)
+            margin = np.ones([feature_height, 2])
+            foo = np.hstack([foo, margin])
+            foo = np.hstack([foo, np.mat(result[:, :, j])])
+        cv2.imshow(f"Feature set of the {i}th layer", foo)
+        cv2.waitKey()
 
-_, _, cn_test_labels, _ = load_mnist.load_cn_dataset('mnist/ei339-cn-manual.pik')
-cn_test_labels = to_categorical(cn_test_labels, 20)
+print_middle_features()
 
-
-model.evaluate(load_mnist.cn_test_images, cn_test_labels)
-# model.evaluate(load_mnist.all_test_images, load_mnist.all_test_labels,
-#                batch_size=32, verbose=1)
 

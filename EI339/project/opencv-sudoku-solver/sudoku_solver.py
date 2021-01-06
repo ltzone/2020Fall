@@ -25,6 +25,11 @@ class SudokuSolution:
         return candidates
 
     def solve(self, debug=False):
+        if self.is_invalid():
+            return None
+        return self.rec_solve(debug)
+
+    def rec_solve(self, debug=False):
         if self.is_complete():
             return self.assign
         fill_x, fill_y = self.select_unassigned_value()
@@ -39,18 +44,34 @@ class SudokuSolution:
             self.assign[fill_x][fill_y] = 0
         return None
 
+    def is_invalid(self):
+        for x in range(9):
+            row = set(self.mat[x].tolist())
+            if sum(row) != np.sum(self.mat[x]):
+                return True
+        for y in range(9):
+            col = set(self.mat[:,y].tolist())
+            if sum(col) != np.sum(self.mat[:,y]):
+                return True
+        for x_blk in range(3):
+            for y_blk in range(3):
+                blk = self.mat[x_blk * 3:x_blk * 3 + 3, y_blk * 3:y_blk * 3 + 3]
+                if sum(set(blk.flatten())) != np.sum(blk):
+                    return True
+        return False
+
+
 if __name__ == "__main__":
-    sudokuGrid = np.array([
-        [5,3,0,0,7,0,0,0,0],
-        [6,0,0,1,9,5,0,0,0],
-        [0,9,8,0,0,0,0,6,0],
-        [8,0,0,0,6,0,0,0,3],
-        [4,0,0,8,0,3,0,0,1],
-        [7,0,0,0,2,0,0,0,6],
-        [0,6,0,0,0,0,2,8,0],
-        [0,0,0,4,1,9,0,0,5],
-        [0,0,0,0,8,0,0,7,9]
-    ])
+    sudokuGrid = np.array(
+        [[ 0,  0,  0, 13,  0, 16,  0,  0, 15],
+ [ 0,  0, 15, 17,  0, 14,  0,  0, 13],
+ [ 0, 17, 11,  0, 12,  0,  0,  0,  0],
+ [19, 18,  0,  0,  0, 13,  0,  0,  0],
+ [ 0,  0,  0, 16,  0, 18,  0,  0,  0],
+ [ 0,  0,  0, 19,  0,  0,  0, 16, 12],
+ [ 0,  0,  0,  0,  0,  0, 15, 13,  0],
+ [12,  0,  0, 14,  0, 17, 19,  0,  0],
+ [13,  0, 14, 15,  0, 19, 12,  0,  0]])
     sol = SudokuSolution(sudokuGrid)
     print(sol.solve())
 

@@ -1,36 +1,24 @@
 ## CNN + CSP Sudoku-Solver
 
+This project is based on [OpenCV Sudoku Solver](https://www.pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/)
 
 
-### Experiments
+### 文件组织
 
-MNIST
-- `train/res1`
-    - activation: sigmoid     
-    - loss: 0.0243 
-    - categorical_accuracy: 0.9834
-- `res_en4_0.001_tanh`
-    - epoch: 10
-    - activation: tanh     
-    - loss: 0.0264 
-    - categorical_accuracy: 0.9828
-- `res_en4_0.001_tanh_round`
-    - epoch: 10
-    - rounded to 0,1
-    - activation: tanh     
-    - loss: 0.0220 
-    - categorical_accuracy: 0.9847
-
-Mixed Dataset
-- `train/res_mixed`
-- loss: 0.0751 
-- categorical_accuracy: 0.9632
-
-CN Dataset
-- `res/CN_classifier`
-  - trained on filtered dataset
-  - Structure: LeNet
-  - 20 epoches, 100 batch size
-  - train_accuracy: 0.9925, loss 0.0368
-  - test_accuracy: 0.9222, loss 0.3103
-  - can work on `test/p1.jpeg`
+```
+├── cnn.py            # CNN模型，实现，训练
+├── eval.py           # 检查模型提取的特征图
+├── load_mnist.py     # 加载mnist中的数据集
+├── mnist             # 打包过后的原数据集
+├── process_cn_deprecated.py  # 处理CN数据集的第一步
+├── process_cn_new.py         # 处理CN数据集的第二步
+├── solve_sudoku_puzzle.py    # 数独求解框架，参数model, image, debug 
+├── sudoku_images             # 创建CN数据集时使用的脚本
+│   └── collect_digit_pict.py
+├── sudoku_solver.py          # CSP实现
+├── train_res
+└── utils             # 保存的模型
+    ├── __init__.py
+    ├── mnist_test_utils.py  # 带加粗的数字提取脚本
+    └── puzzle_utils.py      # 原框架的数字提取脚本
+```

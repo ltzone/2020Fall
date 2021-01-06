@@ -81,7 +81,19 @@ def extract_digit(cell, debug=False):
     # connected borders that touch the border of the cell
     thresh = cv2.threshold(cell, 0, 255,
                            cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
+    # This is new!
+    # resize the picture, bolden the digit and eliminate border
+    # SCALE_FACTOR = 1
+    # scaled_height = int(thresh.shape[0] * SCALE_FACTOR)
+    # scaled_width = int(thresh.shape[1] * SCALE_FACTOR)
+    # top_pad = int((scaled_height - thresh.shape[0]) / 2)
+    # left_pad = int((scaled_width - thresh.shape[1]) / 2)
+    # big_mask = np.zeros((scaled_height, scaled_width), dtype="uint8")
+    # big_mask = cv2.resize(thresh, big_mask.shape)
+    # thresh = big_mask[top_pad:top_pad + thresh.shape[0], left_pad:left_pad + thresh.shape[1]]
     thresh = clear_border(thresh)
+
 
     # check to see if we are visualizing the cell thresholding step
     if debug:
@@ -106,8 +118,12 @@ def extract_digit(cell, debug=False):
     # otherwise, find contours large enough in the cell and create a
     # mask for the contour
     mask = np.zeros(thresh.shape, dtype="uint8")
-    for contour in cnts:
-        cv2.drawContours(mask, [contour], -1, 255, -1)
+    cv2.drawContours(mask, cnts, -1, 255, -1)
+
+    # if debug:
+    #     cv2.imshow("Mask", mask)
+    #     cv2.waitKey(0)
+
 
     # compute the percentage of masked pixels relative to the total
     # area of the image
@@ -121,6 +137,7 @@ def extract_digit(cell, debug=False):
 
     # apply the mask to the thresholded cell
     digit = cv2.bitwise_and(thresh, thresh, mask=mask)
+    # digit = cv2.bitwise_and(thresh, thresh)
 
     # check to see if we should visualize the masking step
     if debug:

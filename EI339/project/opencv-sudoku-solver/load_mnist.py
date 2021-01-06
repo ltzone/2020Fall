@@ -123,5 +123,17 @@ normal_test_labels = to_categorical(normal_test_labels, all_num_classes)
 # cn_test_images = np.around(cn_test_images)
 
 
-normal_test_images = np.around(normal_test_images)
-normal_train_images = np.around(normal_train_images)
+# normal_test_images = np.around(normal_test_images)
+# normal_train_images = np.around(normal_train_images)
+
+
+# print(np.max(all_test_images[0]))
+# print(np.max(all_train_images[0]))
+# print(np.max(test_images[0]))
+# print(np.max(train_images[0]))
+# print(np.max(cn_test_images[0]))
+# print(np.max(cn_train_images[0]))
+# print(np.max(en_train_images[0]))
+# print(np.max(en_test_images[0]))
+# print(np.max(normal_train_images[0]))
+# print(np.max(normal_test_images[0]))
