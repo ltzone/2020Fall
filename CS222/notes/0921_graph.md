@@ -239,8 +239,14 @@ Is cashier's algorithm optimal? (*i.e. use as less coins as possible*)
 
 **Property**. Number of pennies ≤ 4. 
 - Pf. Replace 5 pennies with 1 nickel(5分).
+
+
 **Property**. Number of nickels ≤ 1.
+
+
 **Property**. Number of quarters ≤ 3.
+
+
 **Property**. Number of nickels + number of dimes(1毛) ≤ 2.
 - Pf. Replace 3 dimes and 0 nickels with 1 quarter and 1 nickel
 - Replace 2 dimes and 1 nickel with 1 quarter.

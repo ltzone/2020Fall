@@ -23,7 +23,8 @@ categories:
 | Week9    	| Network Flow II                                                                  	| 11月2日  	|
 | Week10   	| Network Flow III + Intractability (~CSP)                                         	| 11月9日  	|
 | Week11   	| Intractability                                                                   	| 11月16日 	|
-| Week12   	| Extending Intractability & Approximation Algorithms &  Local Search(~metropolis) 	| 11月23日 	|
+| Week12   	| Extending Intractability & Approximation                                       	| 11月23日 	|
+|           | Algorithms &  Local Search(~metropolis)                                           |           |
 | Week13   	| Local Search & Randomized                                                        	| 11月30日 	|
 
 

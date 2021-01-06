@@ -117,7 +117,7 @@ $$\text{perf online} \le c\cdot \text{perf offline} + \alpha$$
 
 Notational Abuses
 - *equal sign:* $O(f(n))$ is a set of functions, but computer scientists often write $T(n)=O(f(n))$ instead of $T(n)\in O(f(n))$
-- *domain:* The domain of $f (n)$ is typically the natural numbers $\left\{ 0, 1, 2, ... \}\right$.
+- *domain:* The domain of $f (n)$ is typically the natural numbers $\left\{ 0, 1, 2, ... \right\}$.
   - Sometimes we restrict to a subset of the natural numbers.
   - Other times we extend to the reals.
 - *Nonnegative functions* When using big-Oh notation, we assume that the functions involved are (asymptotically) nonnegative.
