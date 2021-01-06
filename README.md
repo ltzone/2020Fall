@@ -11,7 +11,7 @@ Course Notes can be found in the *Notes* directory, to view in a better format, 
 
 ### License
 
-Notes部分，部分作业框架整理自网络/授课老师，相关权利由原作者所有。如有侵权，请联系原作者。
+Notes部分，部分作业框架整理自网络/授课老师，相关权利由原作者所有。
 
 其余由本人编写的部分许可如下：
 
