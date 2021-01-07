@@ -1,0 +1,146 @@
+\section{Definitions}
+
+In order to correctly quantify the fairness of the allocation system and effectively compare the performance of the algorithm, we will propose some formal definitions in this section. We will first clarify the notations that will be used through the paper, and then propose indicators to measure the fairness of the system and the quality of the recommended results respectively.
+
+\subsection{Assumptions and Justifications}
+
+We assume that there exists a recommendation algorithm that can provide a rating matrix $R$ and provide a  recommendation list $L_i$ for all users based on $R$. We also assume that there exists a capacity constraint on every service, and that the recommendation is executed with respect to rounds. At the end of every round, the capacity will be emptied.
+
+To deal with the capacity constraint, directly filtering out the overcrowded services from the recommendation list of certain users will have a great chance to break the fairness. To solve the problem, we try to design a strategy to adjust $L$ and generate new recommendation lists $L^T$ which can make users’ recommendation as fair as possible without breaking capacity constraints while still preserving recommendation quality. The results will be in the form of a Top-N recommendation list for every user, where N is a constant and services will be ordered according to its rating matrix.
+
+A single assignment from users to service is clearly not enough to ensure fairness, so our problem will focus on the accumulating fairness throughout multiple rounds. We also assume that our system focuses on a certain "active" user set, who are likely to participate in most of the recommendation rounds, so that the users will not vary very much through multiple rounds, ensuring the steadiness of the fairness scope. We also assume that the participated users will only come once in every round, which follows a given occurrence probability $A$. The user occurrence in the actual coming requests input into the algorithm should conform to the distribution $A$.
+
+
+\subsection{Terminologies}
+
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+\begin{table}[htbp]
+    \begin{center}
+    \begin{tabular}{|c|l|}
+        \hline
+        \textbf{Notions} & \textbf{Represents}  \\ \hline
+        $S=\{s_1, s_2, \cdots, s_m\}$ & Set of recommended services.  \\ \hline
+        $C=\left\{c_{1}, c_{2}, \ldots, c_{m}\right\}$ & Set of services’ capacity constraints.  \\ \hline
+        $U=\left\{u_{1}, u_{2}, \ldots, u_{n}\right\}$ & Set of recommended users.  \\ \hline
+        $\left\{U^{1}, U^{2}, \ldots, U^{T}\right\}$ & Set of arriving users in $T^{th}$ round.  \\ \hline
+        $\left\{U_{1}, U_{2}, \ldots, U_{j}\right\}$ & \tabincell{l}{Set of  users recommended for service $j$ by the original \\ algorithm} \\ \hline
+        $R=\left[r_{1,1}, r_{1,2}, \ldots, r_{n, m}\right]$ & 
+        \tabincell{l}{Predicted rating matrix produced
+        by the original\\  recommendation algorithm of the system;
+        Each entry $r_{ij}$ \\ denotes the relevant
+        rating of user $u_i$ to service $s_j$.}
+  \\ \hline
+        $L=\left\{l_{1}, l_{2}, \ldots, l_{n}\right\}$ & Original recommendation lists based on R.  \\ \hline
+        $L^{T}=\left\{l_{1}^{T}, l_{2}^{T}, \ldots, l_{n}^{T}\right\}$
+         & \tabincell{l}{Recommendation lists finally returned 
+         to users in $T^{th}$ \\ round recommendation.}  \\ \hline
+        $\delta^T_i$ &\tabincell{l}{
+    Variable to indicate whether user $u_i$ uses
+    the \\ recommendation system  in $T^{th}$ recommendation
+    or not, \\where $\delta_i^T = 1$ stands for yes and $\delta_i^T = 0$  stands for no.}  \\ \hline
+    \tabincell{c}{
+    $Q = \left\{Q_{1}, Q_{2}, \ldots, Q_{t}\right\}$\\
+    $Q_{i} = \left\{q_{i1}, q_{i2}, \ldots, q_{ij}\right\} $} & \tabincell{l} {Request Lists for every round, where $q_{ij}$ indicates \\ the user index of the  $j^{th}$ request in the $i^{th}$ round} \\ \hline
+    $A = \{a_1,a_2,\ldots,a_n\}$ & The occurrence probability for user $u_i$ in a round.   \\ \hline
+    \end{tabular}
+    \caption{Basic Notions of Our Work}
+    \label{notion}
+    \end{center}
+    \end{table}
+    
+
+
+% “虽然用了他们的定义框架和一些相同的记号，但我们研究的是不一样的问题”
+
+
+The notions we'll be using are based on the framework of FAST\cite{FAST}, but with a few extra notations in order to formulate the online property. The notations are given in Table \ref{notion}.
+
+We should note that although the measures are with respect to each big round, the input of users are not coming in a pack. Our algorithm should read $q_{ij}$ one after another and return the result without knowing any information of the later requests except for the prior probability $A$ of the users who haven't arrived yet.
+
+
+
+
+\subsection{Fairness Metrics}
+% 根据需要调整定义
+To quantify the level of fairness, we need to formulate metrics to measure it properly. Since we consider the Top-N services, we first need to define whether 
+a service is in one's Top-N sub-list.
+
+\begin{equation}\operatorname{Is\_In}\left(s_{j}, l i s t, N\right)=\left\{\begin{array}{l}0 \text { if } s_{j} \text { is not in the top } N \text { sub-list of list } \\ 1 \text { if } s_{j} \text { is in the top } N \text { sub-list of list }\end{array}\right.\end{equation}
+
+And we define two types of probability below to formulate a user's individual probability of receiving a service with the probability of all users.
+
+\begin{definition}[Ideal Probability]  The probability of a service $s_{j}$ appearing in the recommendation lists of all users in $U_j = \left\{u_i | u_i \text{ owns } Q_{Tk}, \forall k \right\}$ up to $T^{t h}$ round recommendation is:
+\begin{equation}
+p_{j}^{T}=\frac{\sum_{u_{i} \in U_{j}} \sum_{t=0}^{T} \delta_{i}^{t} \cdot  \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)}{\sum_{u_{i} \in U_{j}} \sum_{t=0}^{T} \delta_{i}^{t}}
+\end{equation}
+where $\delta_{i}^{t}$ indicates the possibility that user $i$ is the owner of a request in the $t^{\text{th}}$ round.
+
+% question: sum to average or average to sum when counting probability
+
+
+\end{definition}
+\begin{definition}[Actual Probability] The probability of a service $s_{j}$ appearing in the recommendation lists of user $u_{i}$ up to $T^{{th}}$ request recommendation in $Q$ is:
+\begin{equation}
+p_{i, j}^{T}=\frac{\sum_{t=0}^{T} \delta_{i}^{t} \cdot \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)}{\sum_{t=0}^{T} \delta_{i}^{t}}
+\end{equation}
+where $\delta_{i}^{t}$ indicates the possibility that user $i$ is the owner of a request in the $t^{\text{th}}$ round.
+\end{definition}
+
+Simply speaking, the Ideal Probability describes an ``average''
+while the Actual Probability is of individuals.
+Also notice that
+if $u_i$ gets fair recommendation on $s_j$, the actual and ideal possibilities
+for $s_j$ to appear in the top-N list of $u_i$ are equal.
+Conversely, we can define the difference between them to be 
+a measure for (un)fairness.
+\begin{definition}[Service Fairness Degree]
+Fairness degree of user $u_{i}$ on service $s_{j}$ up to $T^{t h}$ round recommendation:
+\begin{equation}
+F_{i, j}^{T}=\frac{p_{i, j}^{T}-p_{j}^{T}}{p_{j}^{T}}
+\label{eqn:def_fairness}
+\end{equation}
+\end{definition}
+This definition gives a metric for fairness. The larger $|F|$ is,
+the less fairness the recommendation has.
+If $F_{i, j}^{T}$ is greater than zero, it means service $s_{j}$ is allocated to $u_{i}$ 's recommendation lists more frequently than others in $U_{j} ;$ If $F_{i, j}^{T}$ is less than zero, service $s_{j}$ appears in his recommendation lists with fewer opportunities than others; If $F_{i, j}^{T}$ is equal to zero, it means $u_{i}$ gets fair recommendation on $s_{j}$.
+Then for all top-N services, we can give another definition to show the fairness just among users.
+\begin{definition}[Top-N Overall Fairness Degree]
+Overall fairness degree of user $u_{i}$ up to $T^{t h}$ round recommendation:
+\begin{equation}
+F_{i}^{T}=\sum_{s_{j} \in l(N)_{i}} F_{i, j}^{T}
+\end{equation}
+\end{definition}
+% With the measure of fairness, we can represent three levels of fairness in a formalized way:
+% (1) Perfect fairness: $\forall u_{i} \in U$ and $\forall s_{j} \in l(N)_{i}, F_{i, j}^{T}=0$
+% (2) Individual fairness: $\forall u_{i} \in U, F_{i}^{T}=0$.
+% (3) Relative fairness: $\forall u_{i}, u_{j} \in U, F_{i}^{T}=F_{j}^{T}$
+
+As has been argued in the FAST system\cite{FAST}, in the fairest case, the variance of Top-N fairness among users should be equal to zero, where all users have the same actual probability in receiving a service. It is also valid to take the variance among users’ Top -N Fairness $D(F_i^T)$ as a measure of the fairness of recommending system, because $F_i^T$ exactly captures the notion of the accumulating extent of a user's fairness throughout multiple rounds. The smaller the variance is, the more
+fairness a recommending system has.
+
+
+\subsection{Recommendation Quality Metrics}
+Recap that L is the list generated by a conventional recommending algorithm, 
+and $L^T$ is generated by the one which takes fairness into consideration.
+Notice that the quality of recommendations may decrease due to our work to improve fairness.Since we also hope to maintain the quality while improving fairness, we should also introduce a measure for recommending quality.
+
+%n
+We only consider the quality of $l(N)_{i}$, namely the top-N list. In the new list $l_{i}^{T},$ the quality declines when a service is removed, 
+and we use the service predicted rating score to measure the extent of the decline.
+%r：打分
+Therefore, the quality of a new recommendation list $l_{i}^{T}$ will be the sum of rating scores of all the services belonging to $l(N)_{i}$ and $l_{i}^{T}$ at the same time. 
+%分母，归一化
+Notice that users may give their rating in some inclination, we should make a normalization to eliminate this noise factor.
+
+We use the highest rating of $l(N)_{i}$ as the denominator to normalize the quality score. The positions of services $p_{i, j}^{T}$ in their recommendation lists also reflect their importance to a user.($p_{i, j}^{T}$ is not possibility) The quality measurement can be extended by giving each service a logarithmic discount based on its position in $l(N)_{i} .$ The quality of recommendation lists of the entire system consists of the recommendation list quality of each user by adding them all.
+
+\begin{definition}[Quality of Recommendation List]
+Quality of outputted recommendation list $l_{i}^{T}$ of user $u_{i}$ on $T^{\text {th }}$ round recommendation:
+\begin{equation}
+    q_{i}^{T}=\frac{\sum_{s_{j} \in l(N)_{i} \cap l(N)_{i}^{t}} \frac{r_{i, j}}{\log _{2}\left(p_{i, j}^{T}+1\right)}}{r_{i, l(N)_{i}[0]}}
+\end{equation}
+where $l(N)_{i}[0]$ represents the subscript index of the service appearing at the top position of $l(N)_{i},$ and $p_{i, j}^{T}$ is the position of service $s_{j}$ in $l(N)_{i}$
+\end{definition}
+
+
+

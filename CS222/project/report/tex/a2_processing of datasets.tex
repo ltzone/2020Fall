@@ -1,0 +1,14 @@
+\section{Processing of Datasets}
+\subsection{Yelp Dataset}
+This dataset contains the businesses information of two cities, Phoenix and Toronto. The dataset of Phoenix contains 11,252 users, 3774 businesses and 194,188 reviews. The Toronto dataset contains 8867 users, 3,505 businesses, and 1,190,64 reviews. Using the known scores on the extracted data, a collaborative filtering recommendation algorithm based on matrix factorization is implemented to obtain a complete preference score matrix. Then, based on the preference score matrix, the user’s original recommendation list $l_i$, the $U_j$ list of businesses, and other required information are obtained. Since the dataset does not provide capacity information, in this experiment, the capacity constraint of each business is set to a random number between 50 to 100. For online algorithm, we add the user requests list $Q_i$ for each round, which is generated randomly based on the number of users and the arrival probability we have set. 
+
+\subsection{Synthetic datasets}
+The capacity constraint of each service can be divided into four levels which are determined by the ratio of the number of users in $U_j$ to its capacity:
+\begin{itemize}
+    \item \emph{Very Popular Services}: the number of users in $U_j$ is more than 2 times its capacity.
+    \item \emph{Popular Services}: the number of users in $U_j$ is 1-2 times its capacity.
+    \item \emph{Ordinary Services}: the number of users in $U_j$ is 0.9-1.0 times its capacity.
+    \item \emph{Unpopular Services}: the number of users in $U_j$ is 0.9 times its capacity.
+\end{itemize}
+
+Based on the capacity constraints, 4 datasets are generated. \textbf{Dataset 1} represents a situation where there is almost no capacity conflict with half of its services are \emph{Ordinary Services} and the other half are \emph{Unpopular Services}. \textbf{Dataset 2} is a very balanced dataset, and it contains services with all capacity conflict levels, and each level accounts for a quarter of the total. \textbf{Dataset 3} represents a situation where the capacity conflict is pretty prominent. Half of its services are \emph{Very Popular Services}, and the remaining half is divided equally among the other three levels. \textbf{Dataset 4} is a situation with serious conflict, three-quarters of the services are \emph{Very Popular Services}, and the remaining quarter uniformly contains the other three levels. The capacity of each item is a random number from 50 to 70. The user’s original recommendation list $l_i$, the $U_j$ list of businesses, the user requests list $Q_i$ and other required information are obtained in the same way as Yelp Dataset.

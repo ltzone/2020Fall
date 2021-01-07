@@ -1,0 +1,24 @@
+\section{Proposed Solutions}
+
+% 伪代码介绍在线算法
+
+% 难点：
+% 如何设计恢复机制确保Fairness指数在在线过程中依然保持valid + 证明
+% 通过实验说明在线算法和quality、fairness的变化规律
+% 分析新算法的时间复杂度，以及和表现的关系
+% 证明在线算法的N-迭代收敛速度
+
+What we expect to do in this project is listed as follows.
+\begin{enumerate}
+    \item First, we will design a heuristic to be used in the online algorithm, which will exploit the current fairness degree, service capacity distribution and the user-coming prior probability, in order to make sure that the online algorithm will still make improvements towards fairness while maintaining the recommendation quality every round.
+    \item Next, we will try to prove the convergence of our algorithm in making the variance of overall fairness degree minimal.
+    \item We will carry out several experiments on both real and synthetic data-sets. First, we will fix the user set, assuming that the arriving probability is $100\%$ for every user  and compare the results with the original algorithm as an initial validation.
+    \item Then we try to introduce the parameter $A$ which represent the possibility user $u_i$ uses the recommendation system in each round. The experiment results will be compared with integer linear programming that only tries to maximize recommendation quality regardless of fairness, together with the random algorithm that may converge slower in fairness. The experiments may help further validate our conclusions.
+\end{enumerate}
+
+The main challenges of our work are listed as follows.
+
+\begin{enumerate}
+    \item In our on-line algorithm, each round the elements of one sub-list in the input $Q$ is treated one by one, we use heuristics to determine whether a service should be allocated to a user along with the update of $Top-N$ Fairness. We must design some recovery mechanism to ensure that fairness index remains valid at every assignment throughout the online processes.
+    \item Our recommendation is dependent on heuristics rather than global sorting results, and because of the heuristics is related to $A$ , we don't know the coming users and their order in the future, which may lead to some decisions that not really optimal, but ensures that users still have the chance to get a better service. And our main efforts will lie in showing that our on-line algorithm can gain the convergence with iteration.
+\end{enumerate}

@@ -1,0 +1,115 @@
+% @article{FAST,
+%   title={FAST: A Fairness Assured Service Recommendation Strategy Considering Service Capacity Constraints},
+%   author={{Y. Wu}, {J. Cao}, {G. Xu}},
+%   journal={ICSOC},
+%   year= {2020}
+% }
+
+@InProceedings{FAST,
+author="Wu, Yao
+and Cao, Jian
+and Xu, Guandong",
+editor="Kafeza, Eleanna
+and Benatallah, Boualem
+and Martinelli, Fabio
+and Hacid, Hakim
+and Bouguettaya, Athman
+and Motahari, Hamid",
+title="FAST: A Fairness Assured Service Recommendation Strategy Considering Service Capacity Constraint",
+booktitle="Service-Oriented Computing",
+year="2020",
+publisher="Springer International Publishing",
+address="Cham",
+pages="287--303",
+abstract="An excessive number of customers often leads to a degradation in service quality. However, the capacity constraints of services are ignored by recommender systems, which may lead to unsatisfactory recommendation. This problem can be solved by limiting the number of users who receive the recommendation for a service, but this may be viewed as unfair. In this paper, we propose a novel metric Top-N Fairness to measure the individual fairness of multi-round recommendations of services with capacity constraints. By considering the fact that users are often only affected by top-ranked items in a recommendation, Top-N Fairness only considers a sub-list consisting of top N services. Based on the metric, we design FAST, a Fairness Assured service recommendation STrategy. FAST adjusts the original recommendation list to provide users with recommendation results that guarantee the long-term fairness of multi-round recommendations. We prove the convergence property of the variance of Top-N Fairness of FAST theoretically. FAST is tested on the Yelp dataset and synthetic datasets. The experimental results show that FAST achieves better recommendation fairness while still maintaining high recommendation quality.",
+isbn="978-3-030-65310-1"
+}
+
+
+@article{Multisided,
+  title={Multisided Fairness for Recommendation},
+  author={{Burke Robin}},
+  journal={arXiv preprint arXiv:1707.00093},
+  year= {2017}
+}
+
+@article{FER,
+  title={Fairness of Exposure in Rankings},
+  author={{Thorsten Joachims},{Ashudeep Singh}},
+  journal={arXiv preprint arXiv:1802.07281 },
+  year= {2018}
+}
+
+@article{Group,
+  title={Fairness in Recommendation Ranking through Pairwise Comparisons},
+  author={{Beutel Alex},{Chen Jilin},{Doshi Tulsee},{Qian Hai},{Wei Li},{Wu Yi},{Heldt Lukasz},{Zhao Zhe},{Hong  Lichan},{Chi Ed H}},
+  journal={arXiv preprint arXiv:1903.00780  },
+  year= {2019}
+}
+
+@article{Indi1,
+  title={Equity of attention: Amortizing individual fairness in rankings},
+  author={{Asia J. Biega },{Krishna P. Gummadi},{Gerhard Weikum}},
+  journal={The 41st International ACM SIGIR
+Conference on Research \& Development in Information Retrieval. ACM, 405–414  },
+  year= {2018}
+}
+
+@article{Indi2,
+  title={FairnessAware Ranking in Search \& Recommendation Systems with Application to LinkedIn Talent Search},
+  author={{Sahin Cem Geyik},{ Stuart Ambler},{Krishnaram Kenthapadi}},
+  journal={ arXiv preprint arXiv:1905.01989 },
+  year= {2019}
+}
+% online vs offline
+@inproceedings{DBLP:conf/iv/JalaliMSM08,
+  author    = {Mehrdad Jalali and
+               Norwati Mustapha and
+               Md Nasir Sulaiman and
+               Ali Mamat},
+  title     = {A Web Usage Mining Approach Based on {LCS} Algorithm in Online Predicting
+               Recommendation Systems},
+  booktitle = {12th International Conference on Information Visualisation, {IV} 2008,
+               8-11 July 2008, London, {UK}},
+  pages     = {302--307},
+  publisher = {{IEEE} Computer Society},
+  year      = {2008},
+  doi       = {10.1109/IV.2008.40},
+  timestamp = {Wed, 16 Oct 2019 14:14:53 +0200},
+  biburl    = {https://dblp.org/rec/conf/iv/JalaliMSM08.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@book{borodin2005online,
+  title={Online computation and competitive analysis},
+  author={Borodin, Allan and El-Yaniv, Ran},
+  year={2005},
+  publisher={cambridge university press}
+}
+
+
+
+@article{adaptive_recommendation,
+author = {Ho, Shuk and Bodoff, David and Tam, Kar},
+year = {2010},
+month = {01},
+pages = {},
+title = {Timing of Adaptive Web Personalization and Its Effects on Online Consumer Behavior},
+volume = {21},
+journal = {Information Systems Research - ISR},
+}
+
+@inproceedings{stream_recommendation,
+author = {Huang, Yanxiang and Cui, Bin and Zhang, Wenyu and Jiang, Jie and Xu, Ying},
+title = {TencentRec: Real-Time Stream Recommendation in Practice},
+year = {2015},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+abstract = {With the arrival of the big data era, opportunities as well as challenges arise in both industry and academia. As an important service in most web applications, accurate real-time recommendation in the context of big data is of high demand. Traditional recommender systems that analyze data and update models at regular time intervals cannot satisfy the requirements of modern web applications, calling for real-time recommender systems.In this paper, we tackle the ``big", ``real-time" and ``accurate" challenges in real-time recommendation, and propose a general real-time stream recommender system built on Storm named TencentRec from three aspects, i.e., ``system", ``algorithm", and ``data". We analyze the large amount of data streams from a wide range of applications leveraging the considerable computation ability of Storm, together with a data access component and a data storage component developed by us. To deal with various application specific demands, we have implemented several classic practical recommendation algorithms in TencentRec, including the item-based collaborative filtering, the content based, and the demographic based algorithms. Specially, we present a practical scalable item-based CF algorithm in detail, with the super characteristics such as robust to the implicit feedback problem, incremental update and real-time pruning. With the enhancement of real-time data collection and processing, we can capture the recommendation changes in real-time. We deploy the TencentRec in a series of production applications, and observe the superiority of TencentRec in providing accurate real-time recommendations for 10 billion user requests everyday.},
+booktitle = {Proceedings of the 2015 ACM SIGMOD International Conference on Management of Data},
+pages = {227–238},
+numpages = {12},
+keywords = {real-time recommendation, practice, scalability, big data, application},
+location = {Melbourne, Victoria, Australia},
+series = {SIGMOD '15}
+}

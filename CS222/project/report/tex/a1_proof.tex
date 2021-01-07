@@ -1,0 +1,159 @@
+\section{Proof of Properties for Online-FAST}
+
+\textbf{Theorem 1} (Fairness Degree Converges to Zero) Given the arriving probability $A$ for the user set, the sum of Top-N Fairness Degree of all the users in each round will approach to zero (i.e.  $\lim_{T \rightarrow \infty}\sum_{u_{i} \in U} F_{i}^{T}=0$) if and only if the users share a same arriving probability.
+\begin{proof}
+
+The sum of Top-N Fairness at the $T^{th}$ round can be formulated as:
+\begin{equation}
+    \sum_{u_{i} \in U} F_{i}^{T}=\sum_{u_{i} \in U} \sum_{s_{j} \in l(N)_{i}} \frac{p_{i, j}^{T}-p_{j}^{T}}{p_{j}^{T}}
+    \label{thm1-1}
+\end{equation}
+
+We can reformulate Equation \ref{thm1-1} as:
+\begin{equation}
+    \sum_{u \in U} F_{i}^{T}=\sum_{s_{j} \in S} \sum_{u_{i} \in U_{j}}\left( \frac{p_{i, j}^{T}}{p_{j}^{T}}-1\right)
+    \label{thm1-2}
+\end{equation}
+
+For each addend in Equation \ref{thm1-2}, by substituting $p_{i,j}$ and $p_{j}$ with their definitions, we can get:
+\begin{equation}
+    \begin{aligned}
+    \frac{p_{i,j}^{T}}{p_j^T} &= \frac{\frac{\sum_{t=0}^{T} \delta_{i}^{t} \cdot \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)}{\sum_{t=0}^{T} \delta_{i}^{t}}}
+    {\frac{\sum_{u_{k} \in U_{j}} \sum_{t=0}^{T} \delta_{k}^{t} \cdot  \operatorname{Is\_In}\left(s_{j}, l_{k}^{t}, N\right)}{\sum_{u_{k} \in U_{j}} \sum_{t=0}^{T} \delta_{k}^{t}}} \\
+    &= \frac{{\sum_{u_{k} \in U_{j}} \sum_{t=0}^{T} \delta_{k}^{t}}}{{\sum_{t=0}^{T} \delta_{i}^{t}}}
+    \cdot
+    \frac{{\sum_{t=0}^{T} \delta_{i}^{t} \cdot \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)}}{\sum_{u_{k} \in U_{j}} \sum_{t=0}^{T} \delta_{k}^{t} \cdot  \operatorname{Is\_In}\left(s_{j}, l_{k}^{t}, N\right)} \\
+    &\stackrel{{T\rightarrow \infty}}{\longrightarrow} \frac{\sum_{u
+    _k \in U_{j}} a_k }{ a_i} \cdot \frac{{\sum_{t=0}^{T} \delta_{i}^{t} \cdot \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)}}{\sum_{u_{k} \in U_{j}} \sum_{t=0}^{T} \delta_{k}^{t} \cdot  \operatorname{Is\_In}\left(s_{j}, l_{k}^{t}, N\right)} \\
+    &\stackrel{{T\rightarrow \infty}}{\longrightarrow} \frac{\sum_{u
+    _k \in U_{j}} a_k }{ a_i}
+    \cdot
+    \frac{{a_i \cdot \sum_{t=0}^{T} \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)}}{\sum_{u_{k} \in U_{j}} a_{k} \cdot  \sum_{t=0}^{T}  \operatorname{Is\_In}\left(s_{j}, l_{k}^{t}, N\right)} \\
+    &= \frac{\left(\sum_{u
+    _k \in U_{j}} a_k\right) \left(\cdot \sum_{t=0}^{T} \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)\right)}{\sum_{u_{k} \in U_{j}} \left(a_{k} \cdot  \sum_{t=0}^{T}  \operatorname{Is\_In}\left(s_{j}, l_{k}^{t}, N\right)\right)}
+    % \frac{\sum\limits_{u_k \in U_j^T}{\sum\limits_{t=0}^{T}\delta_{k}^{t}}}{1}
+    \end{aligned}
+    \label{thm1-3}
+\end{equation}
+
+To make the second $\stackrel{{T\rightarrow \infty}}{\longrightarrow}$ derivation hold, we specify that $\operatorname{Is\_In}\left(s, l_{i}^{T}, N\right) = 0$ if $u_i \notin U^{T}$ for any service $s$ and list length $N$, which is compatible with the definition and the algorithm implementation.
+
+Now we can further reformulate each addend in Equation \ref{thm1-2} as follows
+\begin{equation}
+    \begin{aligned}
+        \sum_{u_{i} \in U_{j}}\left( \frac{p_{i, j}^{T}}{p_{j}^{T}}-1\right) 
+        & \stackrel{{T\rightarrow \infty}}{\longrightarrow} \frac{\sum_{u_i \in U_j} \left(\sum_{u_k \in U_{j}} a_k\right) \left( \sum_{t=0}^{T} \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)\right)}{\sum_{u_{k} \in U_{j}} \left(a_{k} \cdot  \sum_{t=0}^{T}  \operatorname{Is\_In}\left(s_{j}, l_{k}^{t}, N\right)\right)} - \left| U_j \right| \\
+        &= \frac{\left| U_j \right|\cdot \sum_{u_i \in U_j} \left[\left(\frac{\sum_{u_k \in U_{j}} a_k}{\left| U_j \right|}  - a_{i} \right) \left( \sum_{t=0}^{T} \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)\right) \right]}
+        {\sum_{u_{i} \in U_{j}} \left(a_{i} \cdot  \sum_{t=0}^{T}  \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)\right)} \\
+        &= \frac{\left| U_j \right|\cdot \sum_{u_i \in U_j} \left( \bar{a}- a_{i} \right) \left(\sum_{t=0}^{T} \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)\right) }
+        {\sum_{u_{i} \in U_{j}} \left(a_{i} \cdot  \sum_{t=0}^{T}  \operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)\right)} 
+    \end{aligned}
+    \label{thm1-4}
+\end{equation}
+
+
+Since $\sum_{u \in U} F_{i}^{T}$ is a finite sum of $\sum_{u_{i} \in U_{j}}\left( \frac{p_{i, j}^{T}}{p_{j}^{T}}-1\right)$, we only need to consider the property of convergence to zero for every addend.
+
+In Equation \ref{thm1-4}, $\operatorname{Is\_In}\left(s_{j}, l_{i}^{t}, N\right)$ depends on the dynamic recommendation strategy, as $T$ grows, it will become a large number. Note that both the denominator and the numerator have this term, so itself alone will not cause $\sum_{u \in U} F_{i}^{T}$ to converge or diverge. We only need to consider the relationship of $a_i$ and $\bar{a}$, the total average arriving probability of the user set. It can be observed directly that the derived term in Equation \ref{thm1-4} will be zero if and only if the arriving probabilities are identical, which finishes the proof.
+\end{proof}
+
+
+
+\textbf{Claim 2} (Variance Convergence) For a group of users with the same arriving probability, assume the arrival of them are uniformly distributed. The variance among the Top-N fairness of them $D\left(F_{i}^{T}\right)$ converges with the recommended round $T$.
+
+\begin{proof}
+First, the variance can be formulated as:
+\begin{equation}
+D\left(F_{i}^{T}\right)=\frac{\sum_{u_{i} \in U}\left(F_{i}^{T}-E\left(F_{i}^{T}\right)\right)^{2}}{n}
+\label{thm2-1}
+\end{equation}
+
+where $E\left(F_{i}^{T}\right)$ represents the mean of Top-N Fairness. According to Theorem \ref{thm1}, we can get $\lim_{T\rightarrow\infty}E\left(F_{i}^{T}\right)=0$. Since $U$ is a finite set, we have that:
+\begin{equation}
+\lim_{T\rightarrow\infty} D\left(F_{i}^{T}\right)=\lim_{T\rightarrow\infty}\frac{\sum_{u_{i} \in U}\left(F_{i}^{T}\right)^{2}}{n}
+\label{thm2-2}
+\end{equation}
+
+Since 0 is an lower bound for the term, to prove convergence, we only need to prove $\sum_{u_{i} \in U}\left(F_{i}^{T}\right)^{2} \geqslant \sum_{u_{i} \in U}\left(F_{i}^{T+1}\right)^{2}$
+
+According to Equation \ref{eqn:def_fairness}, we know that:
+\begin{equation}
+\sum_{u_{i} \in U}\left(F_{i}^{T}\right)^{2}=\sum_{u_{i} \in U}\left(\sum_{s_{j} \in l(N)_{i}} \frac{p_{i, j}^{T}-p_{j}^{T}}{p_{j}^{T}}\right)^{2}
+\label{thm2-3}
+\end{equation}
+
+The assumption that the arrivals of users are uniformly distributed implies the following properties.
+\begin{enumerate}
+    \item For service $s_j$ that is unlikely to cause capacity conflicts,
+    \begin{equation}
+        c_{j} \geqslant \sum_{u_i \in U_j} a_i
+        \label{thm2-4}
+    \end{equation}
+    since the arrivals of users are uniformly distributed, it can be assigned to every user in its $U_j$ for most of the rounds. So the ratio of $p_j^T$ and $p^{T}_{i,j}$ will remain steady. They won't cause much influence on the fluctuation of the variance. 
+    \item For service $s_j$ that is likely to cause capacity conflicts,
+    \begin{equation}
+        c_{j}<\sum_{u_i \in U_j} a_i
+        \label{thm2-5}
+    \end{equation}
+    $p_j$ can be considered to be a constant that doesn't change with respect to the round. Since each service $s_j$ will always be assigned to $c_j$ users, so $p_{j}^{T}$ will be a constant less than $1,$ and we call it $\text{Const}_j$
+    \begin{equation}
+        p_{j}^{T}=c_{j} / \operatorname{len}\left(U_{i}\right)=\text { Const}_{j}<1
+        \label{thm2-6}
+    \end{equation}
+\end{enumerate}
+
+
+
+
+Then, Equation \ref{thm2-3} will be:
+\begin{equation}
+\sum_{u_{i} \in U}\left(F_{i}^{T}\right)^{2}=\sum_{u_{i} \in U}\left[\sum_{s_{j} \in l_{i}^{N}}\left(\frac{p_{i, j}^{T}}{\text {Const}_{j}}-1\right)\right]^{2}
+\label{thm2-7}
+\end{equation}
+
+The only variable in Equation \ref{thm2-7} is $p_{i, j}^{t},$ and according to Equation (11), we can get:
+% TODO
+\begin{equation}
+\begin{aligned}
+p_{i, j}^{T} &=\frac{\sum_{t=0}^{T} I s_{-} \operatorname{In}\left(s_{j}, l_{i}^{t}, N\right)}{T} \\
+p_{i, j}^{T+1} &=\frac{\sum_{t=0}^{T} I s_{-} \operatorname{In}\left(s_{j}, l_{i}^{t}, N\right)}{T+1} \\
+&+\frac{I s_{-} \operatorname{In}\left(s_{j}, l_{i}^{T+1}, N\right)}{T+1}
+\end{aligned}
+\label{thm2-8}
+\end{equation}
+
+According to Theorem \ref{thm1}, we can divide users into two parts, users with low Top-N Fairness $\left(F_{i}^{T}<0\right)$ and users with high Top-N Fairness $\left(F_{i}^{T} \geqslant 0\right)$
+
+For users with low Top-N Fairness, addends with $p_{i, j}^{T}<p_{j}$ occupies the main influence factor in the summation formula of Top-N Fairness in this situation. As designed in our strategy, users with low Top-N Fairness will usually get allotted to better services that have been reserved from previous requests, so that in most cases:
+\begin{equation}
+\begin{aligned}
+1>\text {Const}_{j} &>P_{i, j}^{T+1}=\frac{\sum_{t=0}^{T} I s_{-} \operatorname{In}\left(s_{j}, l_{i}^{t}, N\right)+1}{T+1} \\
+&>\frac{\sum_{t=0}^{T} I_{-} \operatorname{In}\left(s_{j}, l_{i}^{t}, N\right)}{T}=P_{i, j}^{T}
+\end{aligned}
+\label{thm2-9}
+\end{equation}
+
+According to Equation \ref{thm2-7}, we can know that
+\begin{equation}
+\left|F_{i}^{T+1}\right|<\left|F_{i}^{T}\right|,\left(F_{i}^{T+1}\right)^{2}<\left(F_{i}^{T}\right)^{2}
+\label{thm2-10}
+\end{equation}
+
+For users with high Top-N Fairness, addends with $P_{i, j}^{T} \geqslant p_{j}$ occupies the main influence factor in the summation formula of TopN Fairness in this situation. Also, according to our recommendation strategy, these users will always be allotted to unsatisfactory services in order to reserve better services to users with a lower $F_i^T$ so that:
+\begin{equation}
+\begin{aligned}
+\text {Const}_{j} \leqslant p_{i, j}^{T+1} &=\frac{\sum_{t=0}^{T} I s_{-} \operatorname{In}\left(s_{j}, l_{i}^{t}, N\right)}{T+1} \\
+&<\frac{\sum_{t=0}^{T} I_{-} \operatorname{In}\left(s_{j}, l_{i}^{t}, N\right)}{T}=P_{i, j}^{T}
+\end{aligned}
+\label{thm2-11}
+\end{equation}
+
+
+According to Equation \ref{thm2-7}, we can also get:
+\begin{equation}
+\left|F_{i}^{T+1}\right|<\left|F_{i}^{T}\right|,\left(F_{i}^{T+1}\right)^{2}<\left(F_{i}^{T}\right)^{2}
+\label{thm2-12}
+\end{equation}
+since in both cases, $\left(F_{i}^{T}\right)^{2}$ is likely to become smaller as the round of recommendation increases, thus Claim \ref{thm2} is true.
+
+\end{proof}

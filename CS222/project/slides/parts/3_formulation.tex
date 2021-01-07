@@ -1,0 +1,44 @@
+% formulate 问题
+
+\begin{frame}{Fairness Assured Recommendation Online Problem for Services with Capacity Constraints}
+    Based on the previous metrics, we have following definition of our problem.
+\begin{block}{Definition 6: Online FAST}
+\textbf{Given}
+
+\begin{enumerate}
+    \item Relevance rating matrix $R$
+    \item Original recommendation lists $\{L\}$
+    \item Set of services' capacity constraint $C$
+    \item $N\in Z_{+}$
+    \item Set of ordered lists of recommendation requests $Q$ where $q_{ij}$ indicates the $j^{\text{th}}$ request in $i^{\text{th}}$ round from a set of users $U$.
+    
+\end{enumerate}
+
+\end{block}
+\end{frame}
+
+\begin{frame}{Definition 6 cont'd}
+\begin{block}{Objective}
+Finding a top-$N$ recommendation list for each request to minimize $D(F_i^T)$, where $D\left(F_{i}^{T}\right)$ represents the variance among Top-N Fairness of all users.
+\end{block}
+\begin{block}{Constraint}
+
+\begin{enumerate}\setlength{\itemsep}{-0.1cm}
+    \item Capacity: keeping $\forall c_{j} \in C, c_{j} \geqslant \sum_{u_{i} \in U} \delta_{i}^{T} \cdot  \operatorname{Is\_In}\left(s_{j}, l_{i}^{T}, N\right)$
+    \item Recommendation Quality: preserving $\sum_{u_{i} \in U} q_{i}^{T}$ at a high level
+    \item Online Property: The recommendation for $q_{ij}$ should not be affected by $q_{i^{\prime}j'}$ where $ i' > i$ or  $j'> j \And i' = i$ .
+\end{enumerate}
+\end{block}
+
+{Improvement of our formulation:}
+    \begin{enumerate}
+        \item Regulating that the requests should be taken sequentially;
+        \item Taking a user coming probability $A$ instead of the fixed user set as input;
+    \end{enumerate}
+    
+\end{frame}
+
+
+
+
+

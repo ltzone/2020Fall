@@ -1,0 +1,58 @@
+\documentclass{article}[12pt]
+\usepackage{color,amsmath,amssymb,graphicx,fancyhdr,amsfonts,amsthm,algorithmic,verbatim,bbold,environ}
+\usepackage{hyperref}
+\usepackage{mkolar_definitions}
+\usepackage{multirow}
+\usepackage{diagbox}
+\usepackage{longtable,booktabs}
+\usepackage{geometry}
+\usepackage{subfigure} 
+\usepackage{indentfirst} 
+\usepackage[ruled,lined,boxed,linesnumbered]{algorithm2e}
+
+\newcommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+\geometry{a4paper,scale=0.8}
+
+
+\title{Online-FAST: An Online Fairness Assured Service Recommendation Strategy Considering Service Capacity Constraints}
+
+\author{Litao Zhou, Hongbo Yang, Shiwen Dong}
+\date{\today}
+
+\usepackage[hyperref=true,backend=biber,sorting=none,backref=true]{biblatex}
+\addbibresource{ref.bib}
+
+\begin{document}
+
+\maketitle
+
+\input{tex/1_introduction}
+
+\input{tex/2_definition}
+
+\input{tex/3_formulation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\input{tex/solution}%% To be deleted when submitting %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{tex/4_algorithm}
+
+\input{tex/5_theorem}
+\input{tex/6_experiment}
+\input{tex/7_conclusion}
+
+
+\appendix
+
+\input{tex/a1_proof}
+\input{tex/a2_processing of datasets}
+
+\printbibliography
+
+
+\end{document}

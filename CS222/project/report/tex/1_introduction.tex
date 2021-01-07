@@ -1,0 +1,46 @@
+\section{Introduction}
+
+\subsection{Problem Background}
+% 介绍相关背景
+A good recommendation system is of great significance to the trade of commodity. Traditional measure of the performance of a system is recommendation accuracy. Now the fairness of algorithms is also attracting more and more attention with the wide application of recommendation systems. Today, a good recommendation system should not only learn and predict users’ preferences to items accurately, but also avoid the unfairness between different users resulting from the recommendation. 
+
+% 形象的问题描述（举例）
+Consider a service recommendation scenario with capacity constraints, we will determine how many customers can get satisfactory service quality. For example, restaurants usually have a capacity limitation representing the number of customers that can be served during meal times. If too many customers come to the restaurant during the peak hour, the supply of the restaurant can't meet the needs of so many people. Therefore, when the number of potential users exceeds the service capacity, we have to sacrifice the interests of some users by not providing them the best recommendation in exchange for the overall capacity feasibility. As a matter of fact, if the decision is too premature, there will be great unfairness. How to ensure the fairness of recommendation while maintaining users’ actual experience is a problem we try to cope with. Unlike accuracy, which can be quantified clearly, fairness is abstract and relatively difficult to define. 
+
+\subsection{Related Work}
+Currently, researchers describe the fairness of a recommendation system from multiple perspectives, which can be divided into three categories considering different stakeholders \cite{Multisided}: customer-fairness, provider-fairness \cite{FER} and CP-fairness (both of customer and provider). Customer-fairness contains group fairness \cite{Group} and individual fairness \cite{Indi1}\cite{Indi2}. The former focuses on the balance between the superior groups and the disadvantaged groups, which requires that these two kinds of groups should have the same opportunities for a particular service so that recommendation results won’t be dominated by some specific group. More microscopically, on the other hand, the individual fairness emphasizes the internal consistency within the group, requiring that similar users should get similar treatment. This fairness can be embodied in the prediction accuracy or the similarity of actual recommendation results and the ideal recommendation results.
+
+
+
+
+% 有关fairness、recommendation系统的论文综述
+% dsw
+
+
+% 简介FAST论文的成果，肯定其中提出的measure（我们也会采用），
+In this paper, we will focus on the individual fairness of the customer, following the definition of the fairness in a research \cite{FAST} about the recommendation methods with the capacity constraint of services. The FAST algorithm (Fairness Assured service recommendation Strategy) proposed in that research is designed to guarantee the long term fairness of multi-round recommendations. By experimenting results on both real and synthetic data-sets, FAST has proved to be able to achieve higher fairness than other existing baseline methods. Additionally, it also maintains a reasonably high recommendation quality. 
+
+
+\subsection{Motivation}
+\label{section:motivation}
+The significance of FAST system is that it proposes a formal metric of individual fairness under service capacity. The metric has proved to be useful when evaluating the fairness of recommendation results under capacity constraints. However, as for the optimization of that metric, the proposed algorithm has a few deficiencies that can't be ignored when it comes to practical deployment. 
+% zlt
+% 指出其解决算法上的不足之处（大批量、多次排序效率低、不符合实际）
+
+
+The first deployment issue with the original algorithm lies in its high computational complexity. A global sorting on fairness degree is required for every assignment in order to find the user who should be given priority to in selecting services. For an online implementation, even if we can implement the sorting process with a priority queue, since the sorting is required for every assignment until the full top-N list is collected, the time required for a single user's request is still in linear proportion to the size of the user set. The computation of $O(n\log n)$ per request can be a large overhead for the server to be deployed.
+
+Another thing to note is that the proposed algorithm can only calculate a global recommendation plan after all users' information has been gathered. However, in practice, users must come sequentially. A static recommendation may not have the desired effect in practice. In fact, from an economist's point of view, Ho\cite{adaptive_recommendation} pointed out that although recommendation quality may improve over the course of a session, the probability of user to consider and accept a given recommendation will degrade over the course of the session. Therefore, recommendations with an adaptive feature will always outstrip the static recommendations in quality. As for the fairness problem, even if the original FAST algorithm yields a better solution on the proposed recommendation quality metrics, an individual user in reality may be less likely to accept the recommendation results due to the system's response latency.
+
+
+\subsection{Major Work and Contributions}
+% 指出在线算法的必要性
+% significance
+% 和其他算法的耦合性能
+% 支持分布式计算！
+Considering the shortcomings of FAST algorithm above, it is necessary to put forward an online algorithm, which can better adapt to the requirements of actual deployment, improve the efficiency of processing a single request, and ensure the fairness of multi-round allocation. We will show in this paper that such an online algorithm can be constructed. In addition to effectively resolving the above problems, our online algorithm is able to support streamed computing and distributed architecture, which is very common in modern real-time recommendation systems\cite{stream_recommendation}. This is because the recommendation is dependent on heuristics rather than global sorting results. This improvement can make our algorithm better coupled with other recommendation algorithms, so as to realize the fairness of the recommendation system in a broader range of applications.
+
+According to the theory of online algorithms\cite{borodin2005online}, an online algorithm is forced to make decisions that may later turn out not to be optimal, which is also the case in our problem, since we don't know the coming order of future users. In our work, such discrepancy is mainly introduced in the heuristic which ensures that later coming users may still have the chance to be allocated a better service. However, we will show that such a sacrifice would not result in a huge loss of overall performance. This idea will be captured by competitive analysis. We will compare our online algorithm with the original algorithm by calculating the competitive ratio in fairness metric, recommendation quality metric and convergence speed, through theoretical analysis and experiments.
+
+
+% todo: structure of the paper

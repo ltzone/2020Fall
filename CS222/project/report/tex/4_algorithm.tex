@@ -1,0 +1,81 @@
+\section{A Fairness Guaranteed Service Recommendation Online System (Online-FAST)}
+
+In the original FAST system, the recommendation algorithm is shown in Algorithm \ref{alg:FAST}, which assumes that the requests from users come in groups and that the system can make use of the global information (the users participating in the round) to return a fairness guaranteed recommendation result while ensuring the recommendation quality.
+
+\begin{algorithm}[htbp]
+    \KwIn{$N$: Parameter Top-$N$;\\
+    \quad $l_{1}, l_{2}, \ldots, l_{n}$: Original recommendation list of users;\\
+    \quad$l(N)_{1}, l(N)_{2}, \ldots, l(N)_{n}$: Original top-$N$ recommendation list of users;\\
+    \quad$R$: Rating matrix;\\
+    \quad$c_{1}, c_{2}, \ldots, c_{m}$: Capacity constraints of services;\\
+    \quad$U_{1}, U_{2}, \ldots, U_{m}: U_{j}$: list of all items;\\
+    \quad$F_{1}^{T-1}, F_{2}^{T-1}, \ldots, F_{n}^{T-1}$: Top-N Fairness of all users up to last recommendation.}
+    \KwOut{$l_{1}^{T}, l_{2}^{T}, \ldots, l_{n}^{T}$: Recommendation list for all the users in $T^{t h}$ round;}
+    \BlankLine
+    
+    \For{time $=0 \rightarrow n \times N-1$}{
+        Sort users according to $F_{i}^{T-1}$ from lowest to highest \;
+        rec\_user $\leftarrow$ user with the lowest $F_{i}^{T-1}$ \;
+        \For{$s_{j}$ in $l(N)_{\text{rec\_user}}$}{
+            \If{$c_{j}>0$}{
+                $c_{j}=c_{j}-1$ \;
+                Update $F_{\text{rec\_user}}^{T-1}$ \;
+            }
+        }
+    }
+    Fill $l_{i}^{T}$ whose positions are larger than $N$ in $l_{i}$ in sequence \;
+    \Return{$l_{1}^{T}, l_{2}^{T}, \ldots, l_{n}^{T}$}
+    \caption{Offline Fairness Assured Service Recommendation Algorithm (FAST) for Fixed Users \label{alg:FAST}}
+\end{algorithm}
+
+As has been argued in Section \ref{section:motivation}, the need of online deployment requires that the algorithm should not depend on future requests when processing a user's request. In addition, users are allowed to appear or not appear with a certain probability in each round. In order to resolve these two requirements, we present a new algorithm Online-FAST in Algorithm \ref{alg:Online-FAST} based on the framework of FAST(Algorithm \ref{alg:FAST}).
+
+\begin{algorithm}[htb]
+    \KwIn{$N$: Parameter Top-$N$;\\
+    \quad $l_{1}, l_{2}, \ldots, l_{n}$: Original recommendation list of users;\\
+    \quad$l(N)_{1}, l(N)_{2}, \ldots, l(N)_{n}$: Original top- $N$ recommendation list of users;\\
+    \quad$R$: Rating matrix;\\
+    \quad$c_{1}, c_{2}, \ldots, c_{m}$: Capacity constraints of services;\\
+    \quad$F_{1}^{T-1}, F_{2}^{T-1}, \ldots, F_{n}^{T-1}$: Top-N Fairness of all users up to last recommendation;\\
+    \quad$a_{1}, a_{2}, \ldots,a_{n}$: The occurrence probability of users in $T^{th}$ round;\\
+    \quad$q_{i1},\ldots,q_{ik}$: The coming request of $T^{th}$ round.
+    }
+    \KwOut{$l_{1}^{T}, l_{2}^{T}, \ldots, l_{n}^{T}$: Recommendation list for all the users in $T^{t h}$ round;}
+    \BlankLine
+    \SetKwFunction{Fcheck}{IsFeasible}
+    \SetKwFunction{FMain}{OnlineFast}
+    \SetKwProg{Fn}{Function}{:}{\Return {$c_{\text{rec\_service}} - 1 > \text{expected\_capacity}$}}
+    \Fn{\Fcheck{rec\_service, priority\_users}}{
+        \textit{expected\_capacity} $= \sum_{u\in \text{priority\_users}} a_{u} \cdot I(\textit{rec\_service} \in l(N)_u)$\; % l(N) issue?
+    }
+    \SetKwProg{Pn}{Function}{:}{\KwRet}
+    \Pn{\FMain{}}{
+        served = \{\}\;
+        \ForEach{request $q_{ij} \in Q_{i}$}{
+            rec\_user = $q_{ij}$.user\;
+            rec\_service = $l_\text{rec\_user}[0]$\;
+            \While{rec\_user's top-N list is not filled}{
+                priority\_users = $\left\{ u \in U/served | F_{u}^{T-1} < F_{\text{rec\_user}}^{T} \right\}$ \;
+                \If{\Fcheck{rec\_service,priority\_users}}{
+                    Assign rec\_service to rec\_user \;
+                    $c_{j}=c_{j}-1$ \;
+                    Update $F_{\text{rec\_user}}^{T-1}$ \;
+                }
+                rec\_service = $l_\text{rec\_user}$.next(rec\_service)\;
+            }
+            send the recommendation result to user\;
+            add user to served set\;
+        }
+    }
+    \caption{Online Fairness Assured Service Recommendation Algorithm (Online-FAST) for Mutable Users with Arriving Probability \label{alg:Online-FAST}}
+\end{algorithm}
+
+
+In an online scenario, since we don't know the future requests, many  scheduling or recommendation systems will use the preemption strategy, which always assigns the available service to first-arriving users until the capacity of the service is full. Certainly, such strategy ensures a relatively optimal result under an online setting. However, it fails to ensures the fairness of users throughout multiple rounds. It might be the case that a large number of users' requests arrive almost at the same time. However, due to network speed, server routing, backend mechanism and other problems, they are identified as a series of successive requests by the server and are processed in an preemptive approach which should not exist.
+
+In order to eliminate the potential unfairness risks in preemption algorithms, we need to design a strategy where those who arrive first can reserve a portion of his best services for those who need it later, and this waiver mechanism should not unduly affect the quality of the recommendation. In Online-FAST, we introduce a utility function called \texttt{IsFeasible} to determine whether the current user should be recommended or give up a service.
+
+
+The \texttt{IsFeasible} function will estimate the number of users that may appear in the future, for whom assigning the services can leads to a reduce in the global difference of fairness degree, and then compare it with the capacity of the current service. It will return false if the job should not be assigned to the current user and be prepared for future users, and return true if the assignment of the service will not cause future unfairness. 
+
+Compared to FAST, the \texttt{IsFeasible} function can be viewed as a ``smaller'' effort towards reducing unfairness since it makes an under-approximation of future unfairness. Therefore, the algorithm should converge slower than FAST. We will later show by experiments that the online-FAST can still ensure the convergence of fairness degree, and will maintain the convergence rate at a practical level.

@@ -1,0 +1,50 @@
+\documentclass{article}[12pt]
+\usepackage{color,amsmath,amssymb,graphicx,fancyhdr,amsfonts,amsthm,algorithmic,verbatim,bbold,environ}
+\usepackage{algorithm,hyperref}
+\usepackage{mkolar_definitions}
+\usepackage{multirow}
+\usepackage{diagbox}
+\usepackage{longtable,booktabs}
+\usepackage{geometry}
+\usepackage{subfigure} 
+\usepackage{indentfirst} 
+\numberwithin{algorithm}{section}
+
+\newcommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+\geometry{a4paper,scale=0.8}
+
+\title{CS222 Final Project Proposal  \\
+\large{Online-FAST: An Online Fairness Assured Service Recommendation\\
+Strategy Considering Service Capacity Constraints}}
+
+\author{Litao Zhou, Hongbo Yang, Shiwen Dong}
+\date{\today}
+
+\usepackage[hyperref=true,backend=biber,sorting=none,backref=true]{biblatex}
+\addbibresource{ref.bib}
+
+\begin{document}
+
+\maketitle
+
+\input{tex/1_introduction}
+
+\input{tex/2_definition}
+
+\input{tex/3_formulation}
+
+\input{tex/4_solution}
+
+
+\printbibliography
+
+
+\end{document}
+
+
+
+% Cao Jian提出的思路：对商家的公平性
+% 可参考：Fairness of Exposure in Rankings， 2018
